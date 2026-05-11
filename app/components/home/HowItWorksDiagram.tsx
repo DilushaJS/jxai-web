@@ -133,12 +133,12 @@ export default function HowItWorksDiagram() {
   }, [isInView]);
 
   return (
-    <section className="bg-[#080808] py-20 px-4" ref={ref}>
-      <div className="max-w-[1166px] mx-auto">
+    <section className="bg-[#010101] py-8 md:py-20 px-4" ref={ref}>
+      <div className="max-w-[1126px] mx-auto">
 
         {/* ── Branch Diagram ─────────────────────────────────────── */}
         <div
-          className="border border-t-0 border-white/[0.10] relative overflow-hidden bg-[#080808]"
+          className="relative overflow-hidden bg-[#010101]"
           style={{ height: VH }}
         >
           {/* subtle radial glow */}

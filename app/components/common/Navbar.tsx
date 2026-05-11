@@ -24,6 +24,8 @@ export default function Navbar() {
               alt="JXAI Logo"
               width={39}
               height={24}
+              loading="eager"
+              priority
             />
           </Link>
           <button
