@@ -15,8 +15,8 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full max-w-[1440px] mx-auto px-3 sm:px-4 py-2 sm:py-3 bg-[#010101] backdrop-blur-md">
-      <div className="mx-auto flex min-h-[52px] sm:min-h-14 flex-col gap-3 sm:h-14 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:px-6">
+    <header className="sticky top-0 z-50 w-full py-2 sm:py-3 bg-[#010101] backdrop-blur-md px-2 sm:px-3">
+      <div className="mx-auto flex min-h-[52px] sm:min-h-14 flex-col gap-3 sm:h-14 sm:flex-row sm:items-center sm:justify-between sm:gap-2 sm:px-9 max-w-[1440px]">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center">
             <Image
