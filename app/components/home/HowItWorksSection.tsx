@@ -1,11 +1,45 @@
-'use client';
+"use client";
 
-import React from 'react'
-import { motion } from 'framer-motion';
+import React, { useEffect, useRef, useState } from 'react';
+import { motion, useInView } from 'framer-motion';
 import Image from 'next/image';
-import HowItWorksDiagram from './HowItWorksDiagram';
+import { HowItWorksDiagram } from './HowItWorksDiagram';
+
+const ANIM_HOLD_MS = 10_500;
+const FADE_MS = 1_500;
+const PAUSE_MS = 400;
+
 
 const HowItWorksSection = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { once: false, margin: '-120px' });
+
+  // animKey forces a full re-mount of the SVG + overlays on each loop iteration,
+  // which resets all pathLength / motion values to their `initial` state cleanly.
+  const [animKey, setAnimKey] = useState(0);
+  const [fading, setFading] = useState(false);
+
+  useEffect(() => {
+    if (!isInView) {
+      setFading(true);
+      return;
+    }
+
+    setFading(false);
+    setAnimKey((k) => k + 1);
+
+    const fadeTimer = setTimeout(() => setFading(true), ANIM_HOLD_MS);
+
+    const restartTimer = setTimeout(() => {
+      setFading(false);
+      setAnimKey((k) => k + 1);
+    }, ANIM_HOLD_MS + FADE_MS + PAUSE_MS);
+
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(restartTimer);
+    };
+  }, [isInView]);
 
   const fadeUp = {
     hidden: { opacity: 0, y: 30 },
@@ -32,7 +66,7 @@ const HowItWorksSection = () => {
   ];
 
   return (
-    <section className="w-full bg-[#010101]">
+    <section ref={sectionRef} className="w-full bg-[#010101]">
         <div className="max-w-[1126px] mx-auto px-4 sm:px-6 md:px-4 pt-24 sm:pt-28 md:pt-32 pb-24 border-l border-r border-t border-[#FFFFFF1A]">
         
             {/* Badge */}
@@ -69,7 +103,12 @@ const HowItWorksSection = () => {
                 className="mt-12 pointer-events-none select-none w-full h-auto md:w-full md:h-auto lg:w-[1179.65px] lg:h-[835.98px] object-contain"
                 aria-hidden="true"
             /> */}
-            <HowItWorksDiagram />
+        <motion.div
+          animate={{ opacity: fading ? 0 : 1 }}
+          transition={{ duration: FADE_MS / 1000, ease: "easeInOut" }}
+        >
+            <HowItWorksDiagram  key={animKey} playing={!fading && isInView} />
+        </motion.div>
         </div>
 
         {/* 3-Column Grid */}
