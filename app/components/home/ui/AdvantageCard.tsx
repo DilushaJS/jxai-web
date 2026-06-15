@@ -7,6 +7,8 @@ type SectionProps = {
   title?: React.ReactNode;
   description?: React.ReactNode;
   image?: string;
+  imageWidth?: number;
+  imageHeight?: number;
   index?: number;
   variant?: 'default' | 'textOnly' | 'imageOnly';
 };
@@ -17,6 +19,8 @@ export function AdvantageCard({
   image,
   index = 0,
   variant = 'default',
+  imageWidth = 500,
+  imageHeight = 400,
 }: SectionProps) {
   const isLeft = index % 2 === 0;
   const isBottomRow = index >= 4;
@@ -42,7 +46,7 @@ export function AdvantageCard({
         <div
           className={`
             p-4 sm:p-6 md:p-10 w-full
-            ${isSecondRow ? 'flex flex-col justify-center items-start h-full' : ''}
+            ${isSecondRow ? 'flex flex-col justify-center items-start h-auto' : ''}
             ${variant !== 'default' && !isSecondRow ? 'flex flex-col justify-center items-center' : ''}
           `}
         >
@@ -66,18 +70,18 @@ export function AdvantageCard({
         className={`
             w-full
             ${variant === 'default' ? '' : ''}
-            ${isSecondRow ? 'h-full flex items-center justify-center' : ''}
+            ${isSecondRow ? 'h-full flex items-center justify-center my-auto' : ''}
             ${variant === 'imageOnly' && !isSecondRow ? 'flex justify-center items-center h-full' : ''}
         `}
         >
             <Image
-                src={image}
-                alt="card image"
-                width={500}
-                height={400}
-                className={`
+              src={image}
+              alt="card image"
+              width={imageWidth}
+              height={imageHeight}
+              className={`
                 ${isSecondRow ? 'max-h-[90%] w-auto object-contain' : 'w-full h-auto object-cover'}
-                `}
+              `}
             />
         </div>
       )}

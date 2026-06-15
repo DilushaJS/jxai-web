@@ -44,16 +44,22 @@ const AdvantagesSection = () => {
     {
         image: "/images/prompt-to-workflow.svg",
         variant: "imageOnly",
+        imageWidth: 572,
+        imageHeight: 132,
     },
     {
       title: "AI Workflow Marketplace",
       description: <>Completely personalize the widget to reflect <br className="hidden md:block" />your brand, creating a cohesive and engaging <br className="hidden md:block" />customer experience.</>,
       image: "/images/ai-workflow-marketplace.svg",
+      imageWidth: 444,
+      imageHeight: 384,
     },
     {
       title: <>SaaS AI Integration <br className="hidden md:block" />For Business</>,
       description: <>Leverage chat data insights like landing page <br className="hidden md:block" />performance and visitor demographics to refine <br className="hidden md:block" />engagement strategies and fuel growth.</>,
       image: "/images/saas-ai-integration.svg",
+      imageWidth: 546,
+      imageHeight: 136,
     },
   ];
 
