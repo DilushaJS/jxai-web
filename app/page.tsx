@@ -5,11 +5,13 @@ import HowItWorksSection from './components/home/HowItWorksSection';
 import TestimonialsSection from './components/home/TestimonialSection';
 import ClientsSection from './components/home/ClientsSection';
 import CaseStudies from './components/home/CaseStudies';
+import IconStrip from './components/common/IconStrip';
 
 export default function Home() {
   return (
     <main className="min-h-screen">
       <Hero />
+      <IconStrip />
       <AdvantagesSection />
       <ToolsSection />
       <HowItWorksSection />
