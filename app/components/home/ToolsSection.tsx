@@ -1,50 +1,161 @@
 'use client';
 
-import React from 'react'
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
+
 import ToolsGrid from './ui/ToolsGrid';
-const ToolsSection = () => {
 
-  const fadeUp = {
-    hidden: { opacity: 0, y: 30 },
-    show: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6 },
+const headerVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 28,
+  },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.7,
+      ease: [0.22, 1, 0.36, 1],
     },
-  };
+  },
+};
 
+export default function ToolsSection() {
   return (
     <section className="w-full bg-[#010101]">
-        <div className="max-w-[1126px] mx-auto px-4 sm:px-6 md:px-4 py-24 sm:py-28 md:py-32 border border-[#FFFFFF1A]">
-        
-            {/* Badge */}
-            <motion.div variants={fadeUp} className="pointer-events-auto justify-center mb-4 flex">
-                <span className="inline-block rounded-[12px] p-[2px] bg-gradient-to-r from-[#F5CB94] to-[#99D2EC]">
-                    <span className="block rounded-[11px] bg-white px-2 py-1 text-[10px] sm:text-[12px] md:text-[13.1px] leading-[12px] sm:leading-[13px] md:leading-[13.57px] font-medium text-[#090F1D] uppercase">
-                    Tools
-                    </span>
-                </span>
-            </motion.div>
+      <div
+        className="
+          mx-auto
+          flex
+          w-full
+          max-w-360
+          flex-col
 
-            {/* Heading */}
-            <motion.div
-            className="flex flex-col items-center gap-1 sm:gap-2 md:gap-2"
-            variants={fadeUp}
-            initial="hidden"
-            animate="show"
+          gap-10
+          px-5
+          py-16
+
+          sm:gap-12
+          sm:px-8
+          sm:py-20
+
+          md:px-10
+
+          lg:gap-16
+          lg:px-12
+          lg:py-20
+
+          xl:px-20
+        "
+      >
+        {/* ============================================================
+            HEADER
+        ============================================================ */}
+        <motion.div
+          variants={headerVariants}
+          initial="hidden"
+          whileInView="show"
+          viewport={{
+            once: true,
+            amount: 0.4,
+          }}
+          className="
+            flex
+            max-w-237.5
+            flex-col
+            items-start
+            gap-2.5
+          "
+        >
+          {/* Tools label */}
+          <div
+            className="
+              inline-flex
+              rounded-full
+              bg-[linear-gradient(99.82deg,#F4CA94_11.11%,#99D1EB_99.18%)]
+              p-0.5
+            "
+          >
+            <span
+              className="
+                inline-flex
+                items-center
+                justify-center
+                rounded-full
+                bg-white
+                px-3
+                py-1.5
+
+                font-['Inter']
+                text-[11px]
+                font-medium
+                leading-[13.57px]
+                tracking-normal
+                text-[#090F1D]
+                uppercase
+
+                sm:text-[12px]
+                lg:text-[13.1px]
+              "
             >
-                <h1 className="text-[36px] sm:text-[52px] md:text-[64px] font-semibold leading-[30px] sm:leading-[42px] md:leading-[70px] tracking-[1.48px] text-white text-center">
-                    Why Choose JX AI
-                </h1>
-                <p className="text-[12px] sm:text-[14px] md:text-[15.9px] font-normal leading-[11px] sm:leading-[15px] md:leading-[19.2px] -tracking-[0.8px] text-[#FFFFFFB2] text-center max-w-[600px] pt-4">
-                    One Platform to Build AI Workflows
-                </p>
-            </motion.div>
-        </div>
-        <ToolsGrid />
-    </section>
-  )
-}
+              Tools
+            </span>
+          </div>
 
-export default ToolsSection
+          {/* Heading */}
+          <h2
+            className="
+              mt-1
+
+              font-['Space_Grotesk']
+              text-[38px]
+              font-bold
+              leading-11
+              tracking-normal
+              text-white
+
+              sm:text-[48px]
+              sm:leading-13.5
+
+              md:text-[56px]
+              md:leading-15.5
+
+              lg:text-[64px]
+              lg:leading-17.5
+            "
+          >
+            Why Choose JX AI
+          </h2>
+
+          {/* Description */}
+          <p
+            className="
+              max-w-190
+
+              font-['Inter']
+              text-[13px]
+              font-normal
+              leading-5
+              tracking-[-0.4px]
+              text-[#FFFFFFB2]
+
+              sm:text-[14px]
+              sm:leading-5.25
+
+              lg:text-[15.9px]
+              lg:leading-[19.2px]
+              lg:tracking-[-0.8px]
+            "
+          >
+            Everything you need to go from idea to running automation, without
+            stitching together half a dozen products.
+          </p>
+        </motion.div>
+
+        {/* ============================================================
+            TOOLS GRID
+        ============================================================ */}
+        <ToolsGrid />
+      </div>
+    </section>
+  );
+}

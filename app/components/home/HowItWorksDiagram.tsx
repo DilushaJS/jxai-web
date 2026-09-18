@@ -1,510 +1,1324 @@
-"use client";
-import { motion } from "framer-motion";
+'use client';
 
-// ─── Loop timing ──────────────────────────────────────────────────────────────
-// Full animation sequence ends ~9.5 s after GLOW_DELAY.
-// We hold for a beat, fade to black over FADE_MS, then restart.
-const ANIM_HOLD_MS = 10_500; // wait after sequence finishes before fade-out
-const FADE_MS      = 1_500;  // cross-fade to black duration (must match motion transition)
-const PAUSE_MS     = 400;    // brief black pause before re-mount
+import { motion } from 'framer-motion';
 
-// ─── Assets ──────────────────────────────────────────────────────────────────
-const imgIcon = "https://www.figma.com/api/mcp/asset/5b68c1c6-5349-45b8-8a85-5fb3de180a60";
+/* ============================================================
+   FIGMA CANVAS
+============================================================ */
 
-// ─── SVG coordinate space ─────────────────────────────────────────────────────
-const W = 1125;   // viewBox width
-const H = 660;    // viewBox height
-const MY = 406;   // y of the main timeline line
+const W = 1200;
+const H = 836;
 
-// ─── Animation timing ─────────────────────────────────────────────────────────
-const GLOW_DUR   = 9;    // seconds for glow to travel full width
-const GLOW_DELAY = 0.5;  // initial pause before glow starts
+/* Main timeline from Figma */
+const MAIN_X1 = 34.42;
+const MAIN_X2 = 1179.65;
+const MAIN_Y = 470.4;
 
-/** Returns the delay (seconds) at which an element at SVG x-coordinate `x` should reveal */
-function at(x: number, offset = 0): number {
-  return GLOW_DELAY + (x / W) * GLOW_DUR + offset;
+/* ============================================================
+   ANIMATION
+============================================================ */
+
+const FLOW_DURATION = 8.8;
+const FLOW_DELAY = 0.45;
+
+function at(x: number, offset = 0) {
+  const progress =
+    (x - MAIN_X1) / (MAIN_X2 - MAIN_X1);
+
+  return (
+    FLOW_DELAY +
+    Math.max(0, Math.min(1, progress)) *
+      FLOW_DURATION +
+    offset
+  );
 }
 
-// ─── Reusable animated SVG path ───────────────────────────────────────────────
-interface AnimPathProps {
+/* ============================================================
+   GRID
+============================================================ */
+
+const GRID_START = 34.23;
+const GRID_END = 1177.62;
+const GRID_COUNT = 21;
+
+const gridXs = Array.from(
+  { length: GRID_COUNT },
+  (_, index) =>
+    GRID_START +
+    index *
+      ((GRID_END - GRID_START) /
+        (GRID_COUNT - 1)),
+);
+
+/*
+ * Figma has 6 brighter vertical guides.
+ * Every fourth grid line gives almost exactly those locations.
+ */
+const majorGridIndexes = new Set([
+  0, 4, 8, 12, 16, 20,
+]);
+
+/* Main-line ruler ticks */
+const tickXs = Array.from(
+  { length: 18 },
+  (_, index) =>
+    206.14 +
+    index * ((1177.62 - 206.14) / 17),
+);
+
+/* ============================================================
+   REUSABLE ANIMATED PATH
+============================================================ */
+
+type AnimatedPathProps = {
   d: string;
-  stroke: string;
-  strokeWidth?: number;
-  dashArray?: string;
   delay: number;
-  duration?: number;
   playing: boolean;
-}
-function AnimPath({
-  d, stroke, strokeWidth = 1.2, dashArray = "5 5",
-  delay, duration = 0.9, playing,
-}: AnimPathProps) {
+  stroke?: string;
+  strokeWidth?: number;
+  dash?: string;
+  duration?: number;
+};
+
+function AnimatedPath({
+  d,
+  delay,
+  playing,
+  stroke = '#693F9B',
+  strokeWidth = 1,
+  dash = '4 5',
+  duration = 0.75,
+}: AnimatedPathProps) {
   return (
     <motion.path
       d={d}
+      fill="none"
       stroke={stroke}
       strokeWidth={strokeWidth}
-      strokeDasharray={dashArray}
-      fill="none"
+      strokeDasharray={dash}
       strokeLinecap="round"
-      initial={{ pathLength: 0, opacity: 0 }}
-      animate={playing
-        ? { pathLength: 1, opacity: 1 }
-        : { pathLength: 0, opacity: 0 }}
+      strokeLinejoin="round"
+      initial={{
+        pathLength: 0,
+        opacity: 0,
+      }}
+      animate={
+        playing
+          ? {
+              pathLength: 1,
+              opacity: 1,
+            }
+          : {
+              pathLength: 0,
+              opacity: 0,
+            }
+      }
       transition={{
-        pathLength: { duration, delay, ease: "easeInOut" },
-        opacity:    { duration: 0.8, delay },
+        pathLength: {
+          duration,
+          delay,
+          ease: [0.22, 1, 0.36, 1],
+        },
+        opacity: {
+          duration: 0.35,
+          delay,
+        },
       }}
     />
   );
 }
 
-// ─── Teal checkmark dot ───────────────────────────────────────────────────────
-function Check({ cx, cy, delay, playing }: { cx: number; cy: number; delay: number; playing: boolean }) {
+/* ============================================================
+   CHECK NODE
+============================================================ */
+
+type CheckNodeProps = {
+  cx: number;
+  cy: number;
+  delay: number;
+  playing: boolean;
+  gray?: boolean;
+};
+
+function CheckNode({
+  cx,
+  cy,
+  delay,
+  playing,
+  gray = false,
+}: CheckNodeProps) {
+  const fill = gray ? '#ABAEBB' : '#693F9B';
+
   return (
     <motion.g
-      initial={{ opacity: 0 }}
-      animate={playing ? { opacity: 1 } : { opacity: 0 }}
-      transition={{ duration: 0.7, delay, ease: "easeIn" }}
-      style={{ originX: `${cx}px`, originY: `${cy}px` }}
+      initial={{
+        opacity: 0,
+        scale: 0.5,
+      }}
+      animate={
+        playing
+          ? {
+              opacity: 1,
+              scale: 1,
+            }
+          : {
+              opacity: 0,
+              scale: 0.5,
+            }
+      }
+      transition={{
+        type: 'spring',
+        stiffness: 350,
+        damping: 22,
+        delay,
+      }}
+      style={{
+        transformOrigin: `${cx}px ${cy}px`,
+      }}
     >
-      {/* Soft bloom behind dot */}
-      <circle cx={cx} cy={cy} r={14} fill="rgba(6,192,202,0.07)" />
-      <circle cx={cx} cy={cy} r={7} fill="#06c0ca" fillOpacity={0.80} />
+      {/* subtle glow */}
+      {!gray && (
+        <circle
+          cx={cx}
+          cy={cy}
+          r="13"
+          fill="#693F9B"
+          opacity="0.08"
+        />
+      )}
+
+      <circle
+        cx={cx}
+        cy={cy}
+        r="8.7"
+        fill={fill}
+      />
+
+      {/* check */}
       <path
-        d={`M ${cx - 3.5} ${cy + 0.5} l 2.5 2.5 l 4.5 -4.5`}
+        d={`
+          M ${cx - 3.5} ${cy}
+          L ${cx - 1} ${cy + 2.4}
+          L ${cx + 4} ${cy - 3}
+        `}
         stroke="#010101"
-        strokeWidth={1.6}
-        fill="none"
+        strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
+        fill="none"
       />
     </motion.g>
   );
 }
 
-// ─── Teal node on main line ───────────────────────────────────────────────────
-function TealNode({ cx, delay, playing }: { cx: number; delay: number; playing: boolean }) {
+/* ============================================================
+   SMALL OUTLINE ANCHOR NODE
+============================================================ */
+
+type AnchorNodeProps = {
+  cx: number;
+  cy: number;
+  delay: number;
+  playing: boolean;
+};
+
+function AnchorNode({
+  cx,
+  cy,
+  delay,
+  playing,
+}: AnchorNodeProps) {
+  return (
+    <motion.circle
+      cx={cx}
+      cy={cy}
+      r="4"
+      fill="#010101"
+      stroke="#693F9B"
+      strokeWidth="1"
+      initial={{
+        opacity: 0,
+        scale: 0,
+      }}
+      animate={
+        playing
+          ? {
+              opacity: 1,
+              scale: 1,
+            }
+          : {
+              opacity: 0,
+              scale: 0,
+            }
+      }
+      transition={{
+        type: 'spring',
+        stiffness: 380,
+        damping: 20,
+        delay,
+      }}
+      style={{
+        transformOrigin: `${cx}px ${cy}px`,
+      }}
+    />
+  );
+}
+
+/* ============================================================
+   ARROW CIRCLES
+============================================================ */
+
+type ArrowCircleProps = {
+  cx: number;
+  cy: number;
+  direction: 'up' | 'down';
+  delay: number;
+  playing: boolean;
+};
+
+function ArrowCircle({
+  cx,
+  cy,
+  direction,
+  delay,
+  playing,
+}: ArrowCircleProps) {
   return (
     <motion.g
-      initial={{ scale: 0, opacity: 0 }}
-      animate={playing ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
-      transition={{ type: "spring", stiffness: 380, damping: 20, delay }}
-      style={{ originX: `${cx}px`, originY: `${MY}px` }}
+      initial={{
+        opacity: 0,
+        scale: 0.8,
+      }}
+      animate={
+        playing
+          ? {
+              opacity: 1,
+              scale: 1,
+            }
+          : {
+              opacity: 0,
+              scale: 0.8,
+            }
+      }
+      transition={{
+        duration: 0.45,
+        delay,
+        ease: [0.22, 1, 0.36, 1],
+      }}
+      style={{
+        transformOrigin: `${cx}px ${cy}px`,
+      }}
     >
-      {/* Ambient pulse ring */}
-      <motion.circle
-        cx={cx} cy={MY} r={10}
-        fill="none"
-        stroke="#06c0ca"
-        strokeWidth={0.8}
-        strokeOpacity={0.2}
-        animate={playing ? { scale: [1, 2.2, 1], opacity: [0.2, 0, 0.2] } : {}}
-        transition={{ duration: 3.5, delay: delay + 0.4, repeat: Infinity, ease: "easeInOut" }}
-        style={{ originX: `${cx}px`, originY: `${MY}px` }}
+      <circle
+        cx={cx}
+        cy={cy}
+        r="19.7"
+        fill="#020202"
+        stroke="#FFFFFF"
+        strokeWidth="1"
       />
-      <circle cx={cx} cy={MY} r={3} fill="#06c0ca" fillOpacity={0.75} />
+
+      {direction === 'up' ? (
+        <path
+          d={`
+            M ${cx} ${cy - 9}
+            L ${cx - 9} ${cy + 7}
+            L ${cx + 9} ${cy + 7}
+            Z
+          `}
+          fill="#693F9B"
+        />
+      ) : (
+        <path
+          d={`
+            M ${cx} ${cy + 9}
+            L ${cx - 9} ${cy - 7}
+            L ${cx + 9} ${cy - 7}
+            Z
+          `}
+          fill="#FFFFFF"
+        />
+      )}
     </motion.g>
   );
 }
 
-// ─── Arrow triangles ──────────────────────────────────────────────────────────
-function UpArrow({ cx, cy, delay, playing }: { cx: number; cy: number; delay: number; playing: boolean }) {
-  return (
-    <motion.polygon
-      points={`${cx},${cy - 9} ${cx - 8},${cy + 5} ${cx + 8},${cy + 5}`}
-      fill="rgba(255,255,255,0.05)"
-      stroke="rgba(255,255,255,0.30)"
-      strokeWidth={1.2}
-      initial={{ opacity: 0 }}
-      animate={playing ? { opacity: 1 } : { opacity: 0 }}
-      transition={{ duration: 0.3, delay }}
-    />
-  );
-}
-function DownArrow({ cx, cy, delay, playing }: { cx: number; cy: number; delay: number; playing: boolean }) {
-  return (
-    <motion.polygon
-      points={`${cx},${cy + 9} ${cx - 8},${cy - 5} ${cx + 8},${cy - 5}`}
-      fill="rgba(255,255,255,0.05)"
-      stroke="rgba(255,255,255,0.30)"
-      strokeWidth={1.2}
-      initial={{ opacity: 0 }}
-      animate={playing ? { opacity: 1 } : { opacity: 0 }}
-      transition={{ duration: 0.3, delay }}
-    />
-  );
-}
+/* ============================================================
+   ACTION PILL
+============================================================ */
 
-// ─── Pill label (HTML overlay) ────────────────────────────────────────────────
-interface PillProps {
+type ActionPillProps = {
+  x: number;
+  y: number;
+  width: number;
   label: string;
-  x: number; y: number;   // SVG-space top-left
-  w?: number;             // SVG-space width (optional)
-  color: "white" | "teal";
-  dir?: "up" | "down";
+  variant: 'white' | 'purple';
   delay: number;
   playing: boolean;
-}
-function Pill({ label, x, y, w, color, dir = "up", delay, playing }: PillProps) {
-  const bg  = color === "teal" ? "bg-[#06c0ca]" : "bg-white";
-  const txt = color === "teal" ? "text-[#0d0d0d]" : "text-black";
-  const dy  = dir === "up" ? -10 : 10;
+};
 
-  const style: React.CSSProperties = {
-    left:      `${(x / W) * 100}%`,
-    top:       `${(y / H) * 100}%`,
-    ...(w ? { width: `${(w / W) * 100}%` } : {}),
-  };
+function ActionPill({
+  x,
+  y,
+  width,
+  label,
+  variant,
+  delay,
+  playing,
+}: ActionPillProps) {
+  const height = 33;
 
   return (
-    <motion.div
-      className={`absolute flex items-center justify-center ${bg} px-4 py-2 rounded-full shadow-lg`}
-      style={style}
-      initial={{ opacity: 0, y: dy, scale: 0.94 }}
-      animate={playing ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: dy, scale: 0.94 }}
-      transition={{ duration: 0.5, delay, ease: [0.16, 1, 0.3, 1] }}
+    <motion.g
+      initial={{
+        opacity: 0,
+        y: 8,
+      }}
+      animate={
+        playing
+          ? {
+              opacity: 1,
+              y: 0,
+            }
+          : {
+              opacity: 0,
+              y: 8,
+            }
+      }
+      transition={{
+        duration: 0.5,
+        delay,
+        ease: [0.22, 1, 0.36, 1],
+      }}
     >
-      <span className={`font-mono text-[13px] ${txt} whitespace-nowrap`}>{label}</span>
-    </motion.div>
+      <rect
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        rx={height / 2}
+        fill={
+          variant === 'white'
+            ? '#FFFFFF'
+            : 'url(#actionPillGradient)'
+        }
+      />
+
+      <text
+        x={x + width / 2}
+        y={y + height / 2 + 0.5}
+        textAnchor="middle"
+        dominantBaseline="middle"
+        fill={
+          variant === 'white'
+            ? '#000000'
+            : '#FFFFFF'
+        }
+        fontSize="16"
+        fontWeight="400"
+        style={{
+          fontFamily:
+            'var(--font-inconsolata), monospace',
+        }}
+      >
+        {label}
+      </text>
+    </motion.g>
   );
 }
 
-// ─── Text label (HTML overlay) ────────────────────────────────────────────────
-interface LabelProps {
+/* ============================================================
+   TEXT LABEL
+============================================================ */
+
+type DiagramLabelProps = {
+  x: number;
+  y: number;
   text: string;
-  x: number; y: number;
   delay: number;
   playing: boolean;
-}
-function Label({ text, x, y, delay, playing }: LabelProps) {
+};
+
+function DiagramLabel({
+  x,
+  y,
+  text,
+  delay,
+  playing,
+}: DiagramLabelProps) {
   return (
-    <motion.span
-      className="absolute font-mono text-[20px] text-white whitespace-nowrap pointer-events-none"
-      style={{
-        left:      `${(x / W) * 100}%`,
-        top:       `${(y / H) * 100}%`,
-        transform: "translateY(-50%)",
+    <motion.text
+      x={x}
+      y={y}
+      fill="#FFFFFF"
+      fontSize="24"
+      fontWeight="400"
+      initial={{
+        opacity: 0,
       }}
-      initial={{ opacity: 0, y: 6, filter: "blur(4px)" }}
-      animate={playing
-        ? { opacity: 1, y: 0, filter: "blur(0px)" }
-        : { opacity: 0, y: 6, filter: "blur(4px)" }}
-      transition={{ duration: 0.55, delay, ease: "easeOut" }}
+      animate={{
+        opacity: playing ? 1 : 0,
+      }}
+      transition={{
+        duration: 0.55,
+        delay,
+      }}
+      style={{
+        fontFamily:
+          'var(--font-inconsolata), monospace',
+      }}
     >
       {text}
-    </motion.span>
+    </motion.text>
   );
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// HowItWorksDiagram — driven by parent's `playing` prop
-// ═══════════════════════════════════════════════════════════════════════════════
-export function HowItWorksDiagram({ playing }: { playing: boolean }) {
-  // Vertical grid lines
-  const gridXs = Array.from({ length: 17 }, (_, i) => (i + 1) * 63);
-  // Ruler tick x positions
-  const tickXs = Array.from({ length: 15 }, (_, i) => 169 + i * 63);
+/* ============================================================
+   START PILL
+
+   Recreated from the SVG you exported from Figma.
+============================================================ */
+
+function StartPill() {
+  const x = 35.25;
+  const y = 444.12;
 
   return (
+    <g transform={`translate(${x} ${y})`}>
+      <rect
+        width="157.674"
+        height="48"
+        rx="24"
+        fill="#FFFFFF"
+      />
+
+      {/* Flag icon from your Figma export */}
+      <path
+        d="
+          M41.3369 27
+          C41.3369 27 42.3369 26 45.3369 26
+          C48.3369 26 50.3369 28 53.3369 28
+          C56.3369 28 57.3369 27 57.3369 27
+          V15
+          C57.3369 15 56.3369 16 53.3369 16
+          C50.3369 16 48.3369 14 45.3369 14
+          C42.3369 14 41.3369 15 41.3369 15
+          V27
+          M41.3369 27
+          V34
+        "
+        stroke="#1E1E1E"
+        strokeWidth="3.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+
+      <text
+        x="80"
+        y="25"
+        dominantBaseline="middle"
+        fill="#000000"
+        fontSize="20"
+        fontWeight="600"
+        style={{
+          fontFamily:
+            'var(--font-inter), sans-serif',
+        }}
+      >
+        Start
+      </text>
+    </g>
+  );
+}
+
+/* ============================================================
+   DIAGRAM
+============================================================ */
+
+export function HowItWorksDiagram({
+  playing,
+}: {
+  playing: boolean;
+}) {
+  return (
     <div
-      className="relative w-full overflow-hidden"
-      style={{ aspectRatio: `${W} / ${H}` }}
+      className="
+        w-full
+        overflow-x-auto
+        overscroll-x-contain
+        [scrollbar-width:none]
+        [&::-webkit-scrollbar]:hidden
+      "
     >
-      <div className="absolute inset-0 origin-top scale-[0.8] sm:scale-100 sm:origin-center">
-        {/* ══ SVG: all structural elements ══════════════════════════════════════ */}
+      {/*
+        On very small screens the diagram stays wide enough
+        for its text to remain readable and can be swiped.
+
+        Desktop scales naturally to the available 1200px width.
+      */}
+      <div
+        className="
+          relative
+          min-w-190
+          sm:min-w-225
+          lg:min-w-0
+          lg:w-full
+        "
+        style={{
+          aspectRatio: `${W} / ${H}`,
+        }}
+      >
         <svg
-          className="absolute inset-0 w-full h-full"
           viewBox={`0 0 ${W} ${H}`}
           preserveAspectRatio="xMidYMid meet"
-          xmlns="http://www.w3.org/2000/svg"
+          className="
+            absolute
+            inset-0
+            h-full
+            w-full
+            select-none
+          "
+          aria-hidden="true"
         >
+          {/* ====================================================
+              DEFINITIONS
+          ==================================================== */}
+
           <defs>
-          {/* Soft diffuse glow — no harsh spotlight */}
-          <filter id="twGlow" x="-200%" y="-600%" width="500%" height="1300%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="22" />
-          </filter>
+            {/* Purple action pill */}
+            <linearGradient
+              id="actionPillGradient"
+              x1="0%"
+              y1="50%"
+              x2="100%"
+              y2="50%"
+            >
+              <stop
+                offset="2%"
+                stopColor="#37155E"
+              />
 
-          {/* Wide ambient bloom */}
-          <filter id="twBloom" x="-200%" y="-800%" width="500%" height="1700%">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="40" />
-          </filter>
+              <stop
+                offset="100%"
+                stopColor="#9C6685"
+              />
+            </linearGradient>
 
-          {/* Spotlight radial gradient (unused but kept for reference) */}
-          <radialGradient id="twSpot" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"   stopColor="#06c0ca" stopOpacity="0.6" />
-            <stop offset="50%"  stopColor="#06c0ca" stopOpacity="0.15" />
-            <stop offset="100%" stopColor="#06c0ca" stopOpacity="0" />
-          </radialGradient>
+            {/* Top fade */}
+            <linearGradient
+              id="topFade"
+              x1="0"
+              y1="0"
+              x2="0"
+              y2="1"
+            >
+              <stop
+                offset="0%"
+                stopColor="#010101"
+                stopOpacity="1"
+              />
 
-          {/* Vertical fade gradients (black overlay top/bottom) */}
-          <linearGradient id="twFadeTop" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%"   stopColor="#010101" stopOpacity="1" />
-            <stop offset="42%"  stopColor="#010101" stopOpacity="0" />
-          </linearGradient>
-          <linearGradient id="twFadeBot" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="58%"  stopColor="#010101" stopOpacity="0" />
-            <stop offset="100%" stopColor="#010101" stopOpacity="1" />
-          </linearGradient>
+              <stop
+                offset="25%"
+                stopColor="#010101"
+                stopOpacity="0.9"
+              />
 
-          {/* Left/right edge fade */}
-          <linearGradient id="twFadeLeft" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%"   stopColor="#010101" stopOpacity="0.6" />
-            <stop offset="8%"   stopColor="#010101" stopOpacity="0" />
-          </linearGradient>
-          <linearGradient id="twFadeRight" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="92%"  stopColor="#010101" stopOpacity="0" />
-            <stop offset="100%" stopColor="#010101" stopOpacity="0.6" />
-          </linearGradient>
+              <stop
+                offset="55%"
+                stopColor="#010101"
+                stopOpacity="0"
+              />
+            </linearGradient>
+
+            {/* Bottom fade */}
+            <linearGradient
+              id="bottomFade"
+              x1="0"
+              y1="0"
+              x2="0"
+              y2="1"
+            >
+              <stop
+                offset="40%"
+                stopColor="#010101"
+                stopOpacity="0"
+              />
+
+              <stop
+                offset="82%"
+                stopColor="#010101"
+                stopOpacity="0.9"
+              />
+
+              <stop
+                offset="100%"
+                stopColor="#010101"
+                stopOpacity="1"
+              />
+            </linearGradient>
+
+            {/* Left edge fade */}
+            <linearGradient
+              id="leftFade"
+              x1="0"
+              y1="0"
+              x2="1"
+              y2="0"
+            >
+              <stop
+                offset="0%"
+                stopColor="#010101"
+                stopOpacity="1"
+              />
+
+              <stop
+                offset="10%"
+                stopColor="#010101"
+                stopOpacity="0"
+              />
+            </linearGradient>
+
+            {/* Right edge fade */}
+            <linearGradient
+              id="rightFade"
+              x1="0"
+              y1="0"
+              x2="1"
+              y2="0"
+            >
+              <stop
+                offset="90%"
+                stopColor="#010101"
+                stopOpacity="0"
+              />
+
+              <stop
+                offset="100%"
+                stopColor="#010101"
+                stopOpacity="1"
+              />
+            </linearGradient>
+
+            {/* Moving glow */}
+            <filter
+              id="timelineGlow"
+              x="-500%"
+              y="-500%"
+              width="1000%"
+              height="1000%"
+            >
+              <feGaussianBlur
+                stdDeviation="18"
+                result="blur"
+              />
+            </filter>
+
+            {/* Grain / rough fade line */}
+            <filter
+              id="grainBand"
+              x="-20%"
+              y="-200%"
+              width="140%"
+              height="500%"
+            >
+              <feTurbulence
+                type="fractalNoise"
+                baseFrequency="0.7"
+                numOctaves="2"
+                seed="7"
+              />
+
+              <feColorMatrix
+                type="saturate"
+                values="0"
+              />
+
+              <feComponentTransfer>
+                <feFuncA
+                  type="table"
+                  tableValues="0 0.22"
+                />
+              </feComponentTransfer>
+            </filter>
           </defs>
 
-        {/* ── Background vertical grid ── */}
-        {gridXs.map((x) => (
-          <line
-            key={x}
-            x1={x} y1={0} x2={x} y2={H}
-            stroke="rgba(255,255,255,0.06)"
-            strokeWidth={1}
-            strokeDasharray="3 12"
+          {/* ====================================================
+              BACKGROUND GRID
+          ==================================================== */}
+
+          {gridXs.map((x, index) => {
+            const isMajor =
+              majorGridIndexes.has(index);
+
+            return (
+              <line
+                key={`grid-${index}`}
+                x1={x}
+                x2={x}
+                y1="70"
+                y2="766"
+                stroke="#FFFFFF"
+                strokeWidth={isMajor ? 1 : 0.75}
+                strokeOpacity={
+                  isMajor ? 0.5 : 0.18
+                }
+              />
+            );
+          })}
+
+          {/* ====================================================
+              FUZZY HORIZONTAL FADE BANDS
+          ==================================================== */}
+
+          <rect
+            x="0"
+            y="190"
+            width={W}
+            height="10"
+            fill="#FFFFFF"
+            opacity="0.17"
+            filter="url(#grainBand)"
           />
-        ))}
 
-        {/* ── Ruler ticks above & below main line ── */}
-        {tickXs.map((x) => (
-          <g key={x}>
-            <line x1={x} y1={MY - 22} x2={x} y2={MY - 13} stroke="rgba(255,255,255,0.10)" strokeWidth={1} />
-            <line x1={x} y1={MY + 13} x2={x} y2={MY + 22} stroke="rgba(255,255,255,0.10)" strokeWidth={1} />
-          </g>
-        ))}
+          <rect
+            x="0"
+            y="510"
+            width={W}
+            height="10"
+            fill="#FFFFFF"
+            opacity="0.17"
+            filter="url(#grainBand)"
+          />
 
-        {/* ── Dim base timeline (always visible at low opacity) ── */}
-        <line
-          x1={0} y1={MY} x2={W} y2={MY}
-          stroke="#06c0ca"
-          strokeWidth={1}
-          strokeOpacity={0.10}
-        />
+          {/* ====================================================
+              BASE TIMELINE
+          ==================================================== */}
 
-        {/* ── Active line: hairline that reveals left-to-right ── */}
-        <motion.path
-          d={`M 0 ${MY} L ${W} ${MY}`}
-          stroke="#06c0ca"
-          strokeWidth={1}
-          strokeOpacity={0.55}
-          fill="none"
-          initial={{ pathLength: 0 }}
-          animate={playing ? { pathLength: 1 } : { pathLength: 0 }}
-          transition={{ duration: GLOW_DUR, delay: GLOW_DELAY, ease: "linear" }}
-        />
+          <line
+            x1={MAIN_X1}
+            y1={MAIN_Y}
+            x2={MAIN_X2}
+            y2={MAIN_Y}
+            stroke="#693F9B"
+            strokeWidth="3"
+            strokeOpacity="0.26"
+          />
 
-        {/* ── Glow: outer wide soft cloud ── */}
-        <motion.g
-          filter="url(#twBloom)"
-          initial={{ x: -200 }}
-          animate={playing ? { x: W + 200 } : { x: -200 }}
-          transition={{ duration: GLOW_DUR, delay: GLOW_DELAY, ease: "linear" }}
-        >
-          <ellipse cx={0} cy={MY} rx={200} ry={30} fill="rgba(6,192,202,0.07)" />
-        </motion.g>
+          {/* Animated timeline */}
+          <motion.path
+            d={`
+              M ${MAIN_X1} ${MAIN_Y}
+              L ${MAIN_X2} ${MAIN_Y}
+            `}
+            fill="none"
+            stroke="#693F9B"
+            strokeWidth="3"
+            strokeLinecap="round"
+            initial={{
+              pathLength: 0,
+            }}
+            animate={{
+              pathLength: playing ? 1 : 0,
+            }}
+            transition={{
+              duration: FLOW_DURATION,
+              delay: FLOW_DELAY,
+              ease: 'linear',
+            }}
+          />
 
-        {/* ── Glow: inner soft diffuse head ── */}
-        <motion.g
-          filter="url(#twGlow)"
-          initial={{ x: -80 }}
-          animate={playing ? { x: W + 80 } : { x: -80 }}
-          transition={{ duration: GLOW_DUR, delay: GLOW_DELAY, ease: "linear" }}
-        >
-          <ellipse cx={0} cy={MY} rx={80} ry={12} fill="rgba(6,192,202,0.22)" />
-        </motion.g>
+          {/* ====================================================
+              TIMELINE TICKS
+          ==================================================== */}
 
-        {/* ══ BRANCH PATHS ══════════════════════════════════════════════════════ */}
+          {tickXs.map((x, index) => {
+            const topPurple =
+              index === 1 || index === 11;
 
-        {/* Open Dashboard: curves up from x=225 to pill */}
-        <AnimPath
-          d={`M 225 ${MY} L 225 ${MY - 96} Q 225 256 295 256`}
-          stroke="rgba(255,255,255,0.28)"
-          delay={at(225, 0.1)}
-          duration={1.0}
-          playing={playing}
-        />
+            const bottomPurple =
+              index === 5;
 
-        {/* Vertical trunk: x=524, up toward Login/Signup */}
-        <AnimPath
-          d={`M 524 ${MY} L 524 130`}
-          stroke="rgba(255,255,255,0.22)"
-          strokeWidth={1}
-          dashArray="4 6"
-          delay={at(524)}
-          duration={1.1}
-          playing={playing}
-        />
+            return (
+              <g key={`tick-${index}`}>
+                <line
+                  x1={x}
+                  x2={x}
+                  y1="448"
+                  y2="461"
+                  stroke={
+                    topPurple
+                      ? '#693F9B'
+                      : '#FFFFFF'
+                  }
+                  strokeWidth="2"
+                  strokeOpacity={
+                    topPurple ? 1 : 0.43
+                  }
+                />
 
-        {/* Signup horizontal branch */}
-        <AnimPath
-          d="M 520 182 L 550 182"
-          stroke="rgba(255,255,255,0.22)"
-          strokeWidth={1}
-          dashArray="4 6"
-          delay={at(524, 0.35)}
-          duration={0.4}
-          playing={playing}
-        />
+                <line
+                  x1={x}
+                  x2={x}
+                  y1="479"
+                  y2="492"
+                  stroke={
+                    bottomPurple
+                      ? '#693F9B'
+                      : '#FFFFFF'
+                  }
+                  strokeWidth="2"
+                  strokeOpacity={
+                    bottomPurple ? 1 : 0.43
+                  }
+                />
+              </g>
+            );
+          })}
 
-        {/* Login horizontal branch */}
-        <AnimPath
-          d="M 524 146 L 554 146"
-          stroke="rgba(255,255,255,0.22)"
-          strokeWidth={1}
-          dashArray="4 6"
-          delay={at(524, 0.55)}
-          duration={0.4}
-          playing={playing}
-        />
+          {/* ====================================================
+              OPEN DASHBOARD BRANCH
+          ==================================================== */}
 
-        {/* Select Tools connector: horizontal from trunk to pill */}
-        <AnimPath
-          d="M 440 314 L 524 314"
-          stroke="rgba(255,255,255,0.22)"
-          strokeWidth={1}
-          dashArray="4 6"
-          delay={at(480, 0.1)}
-          duration={0.5}
-          playing={playing}
-        />
+          <AnimatedPath
+            d="
+              M 264.3 444.5
+              L 264.3 404
+            "
+            delay={at(264, 0.05)}
+            playing={playing}
+          />
 
-        {/* Create AI Workflow: from x=787 up then right to pill */}
-        <AnimPath
-          d={`M 787 ${MY} L 787 296 L 811 296`}
-          stroke="rgba(255,255,255,0.28)"
-          delay={at(787, 0.1)}
-          duration={0.85}
-          playing={playing}
-        />
+          <AnimatedPath
+            d="
+              M 264.3 364
+              L 264.3 350
+              C 264.3 330
+                286 317
+                321 317
+            "
+            delay={at(264, 0.2)}
+            playing={playing}
+          />
 
-        {/* Open Template Gallery: curves down from x=450 */}
-        <AnimPath
-          d={`M 450 ${MY} L 450 ${MY + 63} Q 450 552 519 552`}
-          stroke="rgba(255,255,255,0.28)"
-          delay={at(450, 0.1)}
-          duration={1.0}
-          playing={playing}
-        />
+          <AnchorNode
+            cx={264.3}
+            cy={444.5}
+            delay={at(264)}
+            playing={playing}
+          />
 
-        {/* Enter Prompt: vertical down from x=720 */}
-        <AnimPath
-          d={`M 720 ${MY} L 720 479`}
-          stroke="rgba(255,255,255,0.22)"
-          strokeWidth={1}
-          dashArray="4 6"
-          delay={at(720)}
-          duration={0.6}
-          playing={playing}
-        />
+          <ArrowCircle
+            cx={263.92}
+            cy={384.07}
+            direction="up"
+            delay={at(264, 0.12)}
+            playing={playing}
+          />
 
-        {/* Edit Prompt: continuing down */}
-        <AnimPath
-          d="M 640 552 L 640 609"
-          stroke="rgba(255,255,255,0.15)"
-          strokeWidth={1}
-          dashArray="4 6"
-          delay={at(640, 0.55)}
-          duration={0.5}
-          playing={playing}
-        />
+          <ActionPill
+            x={321.09}
+            y={300.12}
+            width={203.45}
+            label="Open Dashboard"
+            variant="white"
+            delay={at(321, 0.2)}
+            playing={playing}
+          />
 
-        {/* ══ ARROWS ════════════════════════════════════════════════════════════ */}
-        <UpArrow   cx={225} cy={MY - 62} delay={at(225, 0.05)} playing={playing} />
-        <DownArrow cx={450} cy={MY + 68} delay={at(450, 0.05)} playing={playing} />
+          {/* Dashboard -> Select tools */}
+          <AnimatedPath
+            d="
+              M 424 333
+              L 424 346
+              C 424 367
+                447 377
+                482 377
+            "
+            stroke="rgba(255,255,255,0.55)"
+            delay={at(424, 0.15)}
+            playing={playing}
+          />
 
-        {/* ══ MAIN-LINE TEAL NODES ══════════════════════════════════════════════ */}
-        <TealNode cx={225} delay={at(225)}       playing={playing} />
-        <TealNode cx={450} delay={at(450)}       playing={playing} />
-        <TealNode cx={787} delay={at(787)}       playing={playing} />
+          {/* ====================================================
+              LOGIN / SIGNUP / START USING TOOLS
+          ==================================================== */}
 
-        {/* ══ CHECKMARK DOTS ════════════════════════════════════════════════════ */}
-        {/* Login */}
-        <Check cx={524} cy={146} delay={at(524, 0.65)} playing={playing} />
-        {/* Signup */}
-        <Check cx={524} cy={182} delay={at(524, 0.45)} playing={playing} />
-        {/* Checkpoints on trunk */}
-        <Check cx={524} cy={241} delay={at(524, 0.25)} playing={playing} />
-        <Check cx={587} cy={241} delay={at(555, 0.25)} playing={playing} />
-        <Check cx={650} cy={241} delay={at(590, 0.25)} playing={playing} />
-        {/* Near Create AI Workflow */}
-        <Check cx={820} cy={296} delay={at(787, 0.35)} playing={playing} />
-        {/* Enter Prompt endpoint */}
-        <Check cx={720} cy={479} delay={at(720, 0.55)} playing={playing} />
+          <AnimatedPath
+            d="
+              M 567.6 191.6
+              L 567.6 314.5
+            "
+            delay={at(568, 0.1)}
+            playing={playing}
+          />
 
-        {/* ── Gray dot for Edit Prompt ── */}
-        <motion.g
-          initial={{ scale: 0, opacity: 0 }}
-          animate={playing ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
-          transition={{ type: "spring", stiffness: 320, damping: 22, delay: at(640, 0.75) }}
-          style={{ originX: "640px", originY: "609px" }}
-        >
-          <circle cx={640} cy={609} r={8.5} fill="rgba(255,255,255,0.22)" />
-        </motion.g>
+          <AnimatedPath
+            d="
+              M 524.5 314.5
+              L 673.8 314.5
+            "
+            stroke="#FFFFFF"
+            dash=""
+            strokeWidth={1}
+            delay={at(525, 0.15)}
+            duration={0.8}
+            playing={playing}
+          />
 
-          {/* ══ GRADIENT OVERLAYS ═════════════════════════════════════════════════ */}
-          <rect x={0}   y={0}   width={W} height={H} fill="url(#twFadeTop)"   />
-          <rect x={0}   y={0}   width={W} height={H} fill="url(#twFadeBot)"   />
-          <rect x={0}   y={0}   width={W} height={H} fill="url(#twFadeLeft)"  />
-          <rect x={0}   y={0}   width={W} height={H} fill="url(#twFadeRight)" />
+          <CheckNode
+            cx={568.2}
+            cy={191.6}
+            delay={at(568, 0.18)}
+            playing={playing}
+          />
+
+          <CheckNode
+            cx={567.6}
+            cy={314.5}
+            delay={at(568, 0.3)}
+            playing={playing}
+          />
+
+          <CheckNode
+            cx={620.3}
+            cy={314.5}
+            delay={at(620, 0.24)}
+            playing={playing}
+          />
+
+          <CheckNode
+            cx={673.8}
+            cy={314.6}
+            delay={at(674, 0.2)}
+            playing={playing}
+          />
+
+          <DiagramLabel
+            text="Login"
+            x={593.84}
+            y={218}
+            delay={at(568, 0.35)}
+            playing={playing}
+          />
+
+          <DiagramLabel
+            text="Signup"
+            x={533.7}
+            y={255}
+            delay={at(568, 0.45)}
+            playing={playing}
+          />
+
+          <DiagramLabel
+            text="Start Using Tools"
+            x={690.37}
+            y={323}
+            delay={at(674, 0.35)}
+            playing={playing}
+          />
+
+          {/* ====================================================
+              SELECT TOOLS
+          ==================================================== */}
+
+          <ActionPill
+            x={481.95}
+            y={360.39}
+            width={179.04}
+            label="Select Tools"
+            variant="purple"
+            delay={at(528, 0.25)}
+            playing={playing}
+          />
+
+          <AnimatedPath
+            d="
+              M 661 376.9
+              L 704.1 376.9
+            "
+            stroke="#FFFFFF"
+            dash=""
+            delay={at(660, 0.15)}
+            playing={playing}
+          />
+
+          <CheckNode
+            cx={704.1}
+            cy={376.9}
+            delay={at(704, 0.2)}
+            playing={playing}
+          />
+
+          <AnimatedPath
+            d="
+              M 704.1 376.9
+              C 750 376.9
+                773 352
+                773 315
+            "
+            delay={at(704, 0.25)}
+            playing={playing}
+          />
+
+          {/* ====================================================
+              CREATE AI WORKFLOW
+          ==================================================== */}
+
+          <AnimatedPath
+            d="
+              M 835.6 444.1
+              L 835.6 369.2
+              L 859.4 369.2
+            "
+            delay={at(836, 0.1)}
+            playing={playing}
+          />
+
+          <AnchorNode
+            cx={835.6}
+            cy={444.1}
+            delay={at(836)}
+            playing={playing}
+          />
+
+          <ActionPill
+            x={859.42}
+            y={352.75}
+            width={179.04}
+            label="Create AI Workflow"
+            variant="purple"
+            delay={at(880, 0.12)}
+            playing={playing}
+          />
+
+          <AnimatedPath
+            d="
+              M 1038.5 369.2
+              L 1082.4 369.2
+            "
+            stroke="#FFFFFF"
+            dash=""
+            delay={at(1040, 0.12)}
+            playing={playing}
+          />
+
+          <CheckNode
+            cx={1082.4}
+            cy={369.1}
+            delay={at(1082, 0.18)}
+            playing={playing}
+          />
+
+          {/* ====================================================
+              OPEN TEMPLATE GALLERY
+          ==================================================== */}
+
+          <AnimatedPath
+            d="
+              M 492.6 470.4
+              L 492.6 533
+            "
+            delay={at(493, 0.08)}
+            playing={playing}
+          />
+
+          <AnchorNode
+            cx={492.6}
+            cy={492}
+            delay={at(493, 0.12)}
+            playing={playing}
+          />
+
+          <ArrowCircle
+            cx={492.6}
+            cy={552.84}
+            direction="down"
+            delay={at(493, 0.2)}
+            playing={playing}
+          />
+
+          <AnimatedPath
+            d="
+              M 492.6 572.5
+              C 492.6 599
+                515 614.6
+                552.1 614.6
+            "
+            delay={at(493, 0.3)}
+            playing={playing}
+          />
+
+          <ActionPill
+            x={552.06}
+            y={598.14}
+            width={203.45}
+            label="Open Template Gallery"
+            variant="white"
+            delay={at(560, 0.3)}
+            playing={playing}
+          />
+
+          {/* ====================================================
+              ENTER PROMPT
+          ==================================================== */}
+
+          <AnimatedPath
+            d="
+              M 686 598
+              C 686 570
+                710 552.2
+                751.5 552.2
+            "
+            delay={at(687, 0.3)}
+            playing={playing}
+          />
+
+          <CheckNode
+            cx={751.45}
+            cy={552.2}
+            delay={at(751, 0.32)}
+            playing={playing}
+          />
+
+          <DiagramLabel
+            text="Enter Prompt and Go"
+            x={766.18}
+            y={561}
+            delay={at(751, 0.42)}
+            playing={playing}
+          />
+
+          {/* ====================================================
+              EDIT PROMPT
+          ==================================================== */}
+
+          <AnimatedPath
+            d="
+              M 686 631
+              L 686 681.9
+            "
+            stroke="#C7C9D1"
+            delay={at(686, 0.48)}
+            playing={playing}
+          />
+
+          <CheckNode
+            cx={686}
+            cy={681.9}
+            gray
+            delay={at(686, 0.62)}
+            playing={playing}
+          />
+
+          <DiagramLabel
+            text="Edit Prompt"
+            x={704.4}
+            y={691}
+            delay={at(686, 0.7)}
+            playing={playing}
+          />
+
+          {/* ====================================================
+              START PILL
+          ==================================================== */}
+
+          <StartPill />
+
+          {/* ====================================================
+              MOVING PURPLE PLAYHEAD / GLOW
+          ==================================================== */}
+
+          <motion.g
+            initial={{
+              x: MAIN_X1,
+              opacity: 0,
+            }}
+            animate={
+              playing
+                ? {
+                    x: MAIN_X2,
+                    opacity: [0, 1, 1, 0],
+                  }
+                : {
+                    x: MAIN_X1,
+                    opacity: 0,
+                  }
+            }
+            transition={{
+              x: {
+                duration: FLOW_DURATION,
+                delay: FLOW_DELAY,
+                ease: 'linear',
+              },
+              opacity: {
+                duration: FLOW_DURATION,
+                delay: FLOW_DELAY,
+                times: [0, 0.05, 0.92, 1],
+              },
+            }}
+          >
+            <circle
+              cx="0"
+              cy={MAIN_Y}
+              r="32"
+              fill="#8D51CC"
+              opacity="0.12"
+              filter="url(#timelineGlow)"
+            />
+
+            <circle
+              cx="0"
+              cy={MAIN_Y}
+              r="4"
+              fill="#C281FF"
+            />
+          </motion.g>
+
+          {/* ====================================================
+              EDGE / TOP / BOTTOM FADES
+
+              Keep these LAST so the grid naturally fades
+              into the black background like the Figma.
+          ==================================================== */}
+
+          <rect
+            x="0"
+            y="0"
+            width={W}
+            height="350"
+            fill="url(#topFade)"
+            pointerEvents="none"
+          />
+
+          <rect
+            x="0"
+            y="480"
+            width={W}
+            height="356"
+            fill="url(#bottomFade)"
+            pointerEvents="none"
+          />
+
+          <rect
+            x="0"
+            y="0"
+            width="150"
+            height={H}
+            fill="url(#leftFade)"
+            pointerEvents="none"
+          />
+
+          <rect
+            x={W - 150}
+            y="0"
+            width="150"
+            height={H}
+            fill="url(#rightFade)"
+            pointerEvents="none"
+          />
         </svg>
-
-        {/* ══ HTML OVERLAYS: pills & labels ════════════════════════════════════ */}
-        <div className="absolute inset-0 pointer-events-none">
-
-        {/* Start pill — always visible, no animation */}
-        <div
-          className="absolute pointer-events-auto flex items-center gap-2 bg-white px-4 py-3 rounded-full shadow-lg"
-          style={{
-            left: "0%",
-            top: `${(MY / H) * 100}%`,
-            transform: "translateY(-50%)",
-          }}
-        >
-          <img alt="" src={imgIcon} style={{ width: 22, height: 22 }} />
-          <span className="font-semibold text-[18px] text-black leading-none">Start</span>
-        </div>
-
-        {/* ── Pills ── */}
-        <Pill
-          label="Open Dashboard"
-          x={282} y={236} w={200}
-          color="white" dir="up"
-          delay={at(282, 0.25)}
-          playing={playing}
-        />
-        <Pill
-          label="Select Tools"
-          x={440} y={296} w={176}
-          color="teal" dir="up"
-          delay={at(528, 0.1)}
-          playing={playing}
-        />
-        <Pill
-          label="Create AI Workflow"
-          x={850} y={282}
-          color="teal" dir="up"
-          delay={at(900, 0.1)}
-          playing={playing}
-        />
-        <Pill
-          label="Open Template Gallery"
-          x={509} y={534}
-          color="white" dir="down"
-          delay={at(519, 0.45)}
-          playing={playing}
-        />
-
-        {/* ── Text labels ── */}
-        <Label text="Login"              x={554} y={130} delay={at(554, 0.75)} playing={playing} />
-        <Label text="Signup"             x={560} y={165} delay={at(491, 0.55)} playing={playing} />
-        <Label text="Start Using Tools"  x={700} y={225} delay={at(808, 0.15)} playing={playing} />
-        <Label text="Enter Prompt and Go" x={740} y={480} delay={at(740, 0.55)} playing={playing} />
-        <Label text="Edit Prompt"        x={660} y={608} delay={at(660, 0.80)} playing={playing} />
-        </div>
       </div>
     </div>
   );
