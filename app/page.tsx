@@ -2,10 +2,10 @@ import Hero from './components/home/Hero';
 import AdvantagesSection from './components/home/AdvantagesSection';
 import ToolsSection from './components/home/ToolsSection';
 import HowItWorksSection from './components/home/HowItWorksSection';
-import TestimonialsSection from './components/home/TestimonialSection';
 import ClientsSection from './components/home/ClientsSection';
 import CaseStudies from './components/home/CaseStudies';
 import IconStrip from './components/common/IconStrip';
+import PricingSection from './components/home/PricingSection';
 
 export default function Home() {
   return (
@@ -15,7 +15,7 @@ export default function Home() {
       <ToolsSection />
       <AdvantagesSection />
       <HowItWorksSection />
-      <TestimonialsSection />
+      <PricingSection />
       <ClientsSection />
       <CaseStudies />
     </main>
