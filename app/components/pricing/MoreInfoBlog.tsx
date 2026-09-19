@@ -1,147 +1,459 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import Image from "next/image";
-import { ChevronRight } from "lucide-react";
+import Image from 'next/image';
+import {
+  motion,
+  type Variants,
+} from 'framer-motion';
+import { ChevronRight } from 'lucide-react';
+
+/* ============================================================
+   MOTION
+============================================================ */
+
+const containerVariants: Variants = {
+  hidden: {},
+
+  show: {
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.08,
+    },
+  },
+};
+
+const fadeUpVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 26,
+  },
+
+  show: {
+    opacity: 1,
+    y: 0,
+
+    transition: {
+      duration: 0.7,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const imageVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 36,
+    scale: 0.985,
+  },
+
+  show: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+
+    transition: {
+      duration: 0.9,
+      delay: 0.12,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+/* ============================================================
+   MORE INFO BLOG
+============================================================ */
 
 export default function MoreInfoBlog() {
   return (
-    <section className="w-full flex justify-center bg-[#010101] py-24 px-4">
-      <div className="w-full max-w-[1200px] relative flex flex-col items-center text-center">
+    <section
+      className="
+        w-full
+        overflow-hidden
+        bg-[#010101]
+      "
+    >
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="show"
+        viewport={{
+          once: true,
+          margin: '-80px',
+        }}
+        className="
+          mx-auto
+          flex
+          w-full
+          max-w-360
+          flex-col
+          items-center
+          gap-2.5
 
-        {/* More Info */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
+          px-4
+          py-16
+
+          sm:px-6
+          sm:py-20
+
+          md:px-8
+          md:py-24
+
+          lg:px-0
+          lg:py-30
+        "
+      >
+        {/* ========================================================
+            TOP CONTENT
+        ======================================================== */}
+        <motion.div
+          variants={fadeUpVariants}
           className="
-            font-semibold
-            text-white
-            text-[24px]
-            md:text-[28px]
-            lg:text-[32px]
-            tracking-[0.1em]
-            font-[family-name:var(--font-cal)]
-            mb-6
+            relative
+            z-10
+
+            flex
+            w-full
+            flex-col
+            items-center
+
+            gap-6
+
+            text-center
           "
         >
-          More Info
-        </motion.p>
-
-        {/* Text Container with background image */}
-        <div className="relative w-full max-w-[969px] flex flex-col items-center gap-6 pb-[200px] md:pb-[300px] lg:pb-[400px]">
-
-          {/* Title */}
-          <motion.h2
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+          {/* ======================================================
+              TOP TEXT GROUP
+          ====================================================== */}
+          <div
             className="
-              relative z-10
-              text-white
-              font-semibold
-              font-[family-name:var(--font-cal)]
-              tracking-[0.01em]
-              leading-[100%]
-
-              text-[44px]
-              sm:text-[56px]
-              md:text-[72px]
-              lg:text-[96px]
+              flex
+              flex-col
+              items-center
+              gap-4
             "
           >
-            Visit Our Blog Page
-          </motion.h2>
+            {/* More Info */}
+            <motion.p
+              variants={fadeUpVariants}
+              className="
+                font-(family-name:--font-cal)
+                font-semibold
+                leading-none
+                tracking-widest
+                text-white
 
-          {/* Background Image (starts under title) */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 0.8 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
-            className="
-              absolute
-              top-[120px]
-              md:top-[140px]
-              lg:top-[160px]
-              left-1/2
-              -translate-x-1/2
-              w-[400px]
-              md:w-[550px]
-              lg:w-[679px]
-              h-auto
-              opacity-80
-              pointer-events-none
-              z-0
-            "
-          >
-            <Image
-              src="/images/more-info-bg.svg"
-              alt="More info background"
-              width={679}
-              height={760}
-              className="object-contain"
-              priority
-            />
-          </motion.div>
+                text-[20px]
 
-          {/* Description */}
+                sm:text-[24px]
+
+                md:text-[28px]
+
+                lg:text-[32px]
+              "
+            >
+              More Info
+            </motion.p>
+
+            {/* Main title */}
+            <motion.h2
+              variants={fadeUpVariants}
+              className="
+                max-w-242
+
+                font-inter
+                font-semibold
+                leading-none
+                tracking-widest
+                text-white
+
+                text-[42px]
+
+                sm:text-[56px]
+
+                md:text-[72px]
+
+                lg:text-[84px]
+              "
+            >
+              Visit Our Blog Page
+            </motion.h2>
+          </div>
+
+          {/* ======================================================
+              DESCRIPTION
+          ====================================================== */}
           <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
+            variants={fadeUpVariants}
             className="
-              relative z-10
-              text-white
+              max-w-242
+
+              font-(family-name:--font-dm)
               font-light
-              font-[family-name:var(--font-dm)]
-              text-[16px]
+              leading-[130%]
+              tracking-normal
+              text-white
+
+              text-[14px]
+
+              sm:text-[16px]
+
+              md:max-w-180
               md:text-[18px]
+
+              lg:max-w-242
               lg:text-[20px]
-              leading-[100%]
-              max-w-[720px]
+              lg:leading-none
             "
           >
-            As seasoned executives, we've had the privilege of
+            As seasoned executives, we&apos;ve had the privilege of
+            <br className="hidden md:block" />
             working with a multitude of companies from diverse
+            <br className="hidden md:block" />
             backgrounds.
           </motion.p>
 
-          {/* Button */}
-          <motion.button
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.97 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+          {/* ======================================================
+              BLOG BUTTON
+          ====================================================== */}
+          <motion.a
+            variants={fadeUpVariants}
+            href="/blog"
             className="
-              relative z-10
+              group/button
+              relative
+
               flex
+              h-9.25
+              w-36.75
               items-center
-              gap-2
-              px-5
-              h-[36.84px]
-              rounded-[21.98px]
-              bg-[#06C0CA1A]
-              text-white
+              justify-center
+              gap-1
+
+              overflow-hidden
+
+              rounded-full
+
+              border
+              border-[#C281FF]/20
+
+              bg-[#C281FF]/10
+
+              px-4
+
+              font-(family-name:--font-dm)
               text-[16px]
               font-medium
-              font-[family-name:var(--font-dm)]
-              hover:bg-[#06C0CA33]
-              transition
+              leading-none
+              tracking-normal
+              text-white
+
+              backdrop-blur-[14px]
+
+              transition-[background-color,border-color,box-shadow]
+              duration-300
+
+              hover:border-[#C281FF]/55
+              hover:bg-[#C281FF]/20
+              hover:shadow-[0_0_28px_rgba(194,129,255,0.18),inset_0_0_18px_rgba(194,129,255,0.08)]
+
+              focus-visible:outline-none
+              focus-visible:ring-2
+              focus-visible:ring-[#C281FF]/70
+              focus-visible:ring-offset-2
+              focus-visible:ring-offset-[#010101]
             "
           >
-            Blog Page
-            <ChevronRight size={16} />
-          </motion.button>
+            {/* Subtle inner glow */}
+            <span
+              aria-hidden="true"
+              className="
+                pointer-events-none
+                absolute
+                inset-0
 
-        </div>
+                bg-[radial-gradient(circle_at_50%_50%,rgba(194,129,255,0.12),transparent_70%)]
 
-      </div>
+                opacity-0
+
+                transition-opacity
+                duration-300
+
+                group-hover/button:opacity-100
+              "
+            />
+
+            {/* Glass sheen */}
+            <span
+              aria-hidden="true"
+              className="
+                pointer-events-none
+                absolute
+                inset-y-0
+                -left-1/2
+
+                w-1/3
+
+                -skew-x-12
+
+                bg-linear-to-r
+                from-transparent
+                via-white/10
+                to-transparent
+
+                transition-transform
+                duration-500
+                ease-out
+
+                group-hover/button:translate-x-[500%]
+              "
+            />
+
+            <span className="relative z-10">
+              Blog Page
+            </span>
+
+            <ChevronRight
+              aria-hidden="true"
+              className="
+                relative
+                z-10
+                size-5
+                shrink-0
+                text-white
+
+                transition-transform
+                duration-300
+
+                group-hover/button:translate-x-0.5
+              "
+              strokeWidth={2}
+            />
+          </motion.a>
+        </motion.div>
+
+        {/* ========================================================
+            VISUAL
+        ======================================================== */}
+        <motion.div
+          variants={imageVariants}
+          className="
+            group/image
+            relative
+            mt-2
+
+            w-full
+            max-w-360
+
+            overflow-hidden
+          "
+        >
+          {/* Purple ambient glow */}
+          <div
+            aria-hidden="true"
+            className="
+              pointer-events-none
+              absolute
+              left-1/2
+              top-1/2
+              z-0
+
+              h-32
+              w-1/2
+
+              -translate-x-1/2
+              -translate-y-1/2
+
+              rounded-full
+
+              bg-[#8C45FF]/10
+              blur-3xl
+
+              transition-[opacity,transform]
+              duration-700
+
+              group-hover/image:scale-110
+              group-hover/image:bg-[#8C45FF]/15
+            "
+          />
+
+          {/* Image */}
+          <Image
+            src="/images/pricing/more-info.svg"
+            alt=""
+            width={1440}
+            height={332}
+            sizes="100vw"
+            className="
+              relative
+              z-10
+              block
+              h-auto
+              w-full
+
+              select-none
+
+              transition-[filter,opacity]
+              duration-700
+
+              group-hover/image:drop-shadow-[0_0_24px_rgba(194,129,255,0.10)]
+            "
+            draggable={false}
+          />
+
+          {/* Bottom fade */}
+          <div
+            aria-hidden="true"
+            className="
+              pointer-events-none
+              absolute
+              inset-x-0
+              bottom-0
+              z-20
+
+              h-1/3
+
+              bg-linear-to-t
+              from-[#010101]
+              to-transparent
+            "
+          />
+
+          {/* Side fades */}
+          <div
+            aria-hidden="true"
+            className="
+              pointer-events-none
+              absolute
+              inset-y-0
+              left-0
+              z-20
+
+              w-[12%]
+
+              bg-linear-to-r
+              from-[#010101]
+              to-transparent
+            "
+          />
+
+          <div
+            aria-hidden="true"
+            className="
+              pointer-events-none
+              absolute
+              inset-y-0
+              right-0
+              z-20
+
+              w-[12%]
+
+              bg-linear-to-l
+              from-[#010101]
+              to-transparent
+            "
+          />
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

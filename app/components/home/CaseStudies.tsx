@@ -1,167 +1,580 @@
-"use client";
+'use client';
 
-import Image from "next/image";
+import { useState } from 'react';
+import Image from 'next/image';
+import {
+  motion,
+  type Variants,
+} from 'framer-motion';
+
+/* ============================================================
+   DATA
+============================================================ */
 
 const cards = [
   {
-    iconImage: "/icons/case-icon1.svg",
-    title: "White-Labeled Multi-Tenant Support",
+    iconImage: '/icons/case-icon1.svg',
+    title: 'White-Labeled Multi-Tenant Support',
     description:
-      "Effortlessly sync data across multiple tenants with OAuth2-based security, perfect for SaaS builders.",
-    image: "/images/case1.svg",
+      'Effortlessly sync data across multiple tenants with OAuth2-based security, perfect for SaaS builders.',
+    image: '/images/case1.svg',
   },
   {
-    iconImage: "/icons/case-icon2.svg",
-    title: "100+ Connectors",
+    iconImage: '/icons/case-icon2.svg',
+    title: '100+ Connectors',
     description:
-      "Integrate with a wide range of data sources with over 100 pre-built connectors.",
-    image: "/images/case2.svg",
+      'Integrate with a wide range of data sources with over 100 pre-built connectors.',
+    image: '/images/case2.svg',
   },
   {
-    iconImage: "/icons/case-icon3.svg",
-    title: "Unified Agentic Search",
+    iconImage: '/icons/case-icon3.svg',
+    title: 'Unified Agentic Search',
     description:
-      "Enable powerful, unified search across your workspace data with ease.",
-    image: "/images/case3.svg",
+      'Enable powerful, unified search across your workspace data with ease.',
+    image: '/images/case3.svg',
   },
 ];
 
-// Card width + gap must match the CSS below (448.33 + 24 = 472.33px per card)
-const CARD_WIDTH = 448.33;
-const GAP = 24;
-const CARD_STRIDE = CARD_WIDTH + GAP; // 472.33px
+/* ============================================================
+   MOTION
+============================================================ */
 
-// We render 4 copies so the strip is always wider than any viewport,
-// and we animate exactly `cards.length * CARD_STRIDE` px — one full set.
-const COPIES = 4;
-const STRIP_SETS = 2; // rendered sets per copy pair for seamless wrap
+const headerVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 24,
+  },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.7,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
 
-const Card = ({ item }: { item: (typeof cards)[0] }) => {
+const carouselVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 32,
+  },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      delay: 0.1,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+const buttonVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 18,
+  },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.65,
+      delay: 0.15,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+};
+
+/* ============================================================
+   CARD
+============================================================ */
+
+function CaseStudyCard({
+  item,
+}: {
+  item: (typeof cards)[number];
+}) {
   return (
-    <div
-      className="flex-shrink-0 rounded-[10px] border border-white/10 bg-[#0B0C0F] p-4 flex flex-col justify-between relative overflow-hidden"
-      style={{ width: CARD_WIDTH, height: 390 }}
+    <article
+      className="
+        group
+        relative
+        flex
+        h-90
+        w-77.5
+        shrink-0
+        flex-col
+        justify-between
+        overflow-hidden
+
+        rounded-[10px]
+        border
+        border-white/10
+        bg-[#0B0C0F]
+
+        p-4
+
+        transition-[border-color,background-color,box-shadow]
+        duration-300
+
+        hover:border-white/15
+        hover:bg-[#0D0E12]
+        hover:shadow-[0_20px_60px_rgba(0,0,0,0.22)]
+
+        sm:h-93.75
+        sm:w-95
+
+        lg:h-97.5
+        lg:w-[448.33px]
+      "
     >
-      <div>
-        <div className="flex items-center gap-2 mb-3">
+      {/* ========================================================
+          CARD TEXT
+      ======================================================== */}
+      <div className="relative z-10">
+        <div
+          className="
+            mb-3
+            flex
+            items-center
+            gap-2
+          "
+        >
           <Image
             src={item.iconImage}
-            alt={item.title}
+            alt=""
             width={16}
             height={16}
-            className="flex-shrink-0"
+            className="size-4 shrink-0"
           />
-          <h3 className="text-[15.9px] leading-[19.2px] tracking-[-0.5px] text-white font-medium">
+
+          <h3
+            className="
+              font-sans
+              text-[14px]
+              font-medium
+              leading-4.5
+              tracking-[-0.5px]
+              text-white
+
+              sm:text-[15px]
+
+              lg:text-[15.9px]
+              lg:leading-[19.2px]
+            "
+          >
             {item.title}
           </h3>
         </div>
-        <p className="text-[15.9px] leading-[19.2px] tracking-[-0.5px] text-white/60 max-w-[90%]">
+
+        <p
+          className="
+            max-w-[95%]
+
+            font-sans
+            text-[13px]
+            font-normal
+            leading-4.5
+            tracking-[-0.4px]
+            text-white/60
+
+            sm:text-[14px]
+            sm:leading-5
+
+            lg:text-[15.9px]
+            lg:leading-[19.2px]
+            lg:tracking-[-0.5px]
+          "
+        >
           {item.description}
         </p>
       </div>
 
-      <div className="relative w-full h-[250px] mt-4">
+      {/* ========================================================
+          CARD IMAGE
+      ======================================================== */}
+      <div
+        className="
+          relative
+          mt-4
+          h-55
+          w-full
+
+          sm:h-58.75
+
+          lg:h-62.5
+        "
+      >
         <Image
           src={item.image}
-          alt={item.title}
+          alt=""
           fill
-          className="object-cover rounded-[12px]"
+          sizes="
+            (max-width: 640px) 310px,
+            (max-width: 1024px) 380px,
+            448px
+          "
+          className="
+            select-none
+            object-cover
+          "
         />
-        <div className="absolute bottom-0 left-0 w-full h-[118px] bg-gradient-to-b from-transparent to-[#04031C]/35" />
-      </div>
-    </div>
-  );
-};
 
-export default function CaseStudies() {
-  // The keyframe translates exactly one full set of cards to the left,
-  // then CSS resets to 0 — because the next set is identical, it looks seamless.
-  const totalShift = cards.length * CARD_STRIDE; // px to shift per loop
-
-  return (
-    <section className="bg-[#010101] w-full flex justify-center py-20 relative overflow-hidden">
-
+        {/* Bottom fade */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background: "radial-gradient(ellipse 30% 80% at 100% 100%, #7DF9FF54 0%, transparent 70%)",
-            backdropFilter: "blur(534px)",
-          }}
+          className="
+            pointer-events-none
+            absolute
+            inset-x-0
+            bottom-0
+            h-29.5
+
+            bg-linear-to-b
+            from-transparent
+            to-[#04031C]/35
+          "
         />
+      </div>
+    </article>
+  );
+}
 
+/* ============================================================
+   CARD GROUP
+============================================================ */
 
-      {/* Inject keyframes and button shadow styles */}
+function CardGroup() {
+  return (
+    <div
+      className="
+        flex
+        shrink-0
+
+        gap-4
+        pr-4
+
+        sm:gap-5
+        sm:pr-5
+
+        lg:gap-6
+        lg:pr-6
+      "
+    >
+      {cards.map((item) => (
+        <CaseStudyCard
+          key={item.title}
+          item={item}
+        />
+      ))}
+    </div>
+  );
+}
+
+/* ============================================================
+   CASE STUDIES
+============================================================ */
+
+export default function CaseStudies() {
+  const [isCarouselPaused, setIsCarouselPaused] =
+    useState(false);
+
+  return (
+    <section
+      className="
+        w-full
+        overflow-hidden
+        bg-[#010101]
+      "
+    >
+      {/* ============================================================
+          MARQUEE ANIMATION
+
+          CSS animation is used for the infinite track because
+          animation-play-state can pause at the exact current
+          position and resume without restarting.
+      ============================================================ */}
       <style>{`
-        @keyframes marquee {
-          0%   { transform: translateX(0); }
-          100% { transform: translateX(-${totalShift}px); }
+        @keyframes caseStudiesMarquee {
+          from {
+            transform: translate3d(0, 0, 0);
+          }
+
+          to {
+            transform: translate3d(-50%, 0, 0);
+          }
         }
-        .marquee-track {
-          animation: marquee 30s linear infinite;
+
+        .case-studies-marquee {
+          animation: caseStudiesMarquee 30s linear infinite;
           will-change: transform;
         }
-        .marquee-track:hover {
-          animation-play-state: paused;
-        }
-        .btn-shadow {
-          box-shadow: 0px 0px 0px -1.75px #1249B0A6,
-                      0px 0px 0px -3.5px #1249B04D,
-                      0px 0.6px 0.6px -1.25px #CCD1D92E inset,
-                      0px 2.29px 2.29px -2.5px #CCD1D929 inset,
-                      0px 10px 10px -3.75px #CCD1D90F inset,
-                      0px 0.6px 1.57px -1.17px #1249B0AD inset,
-                      0px 2.29px 5.95px -2.33px #1249B09C inset,
-                      0px 10px 26px -3.5px #1249B04D inset,
-                      0px -0.8px 0.8px -0.69px #1249B070 inset,
-                      0px -2.41px 2.41px -1.38px #1249B06E inset;
+
+        @media (prefers-reduced-motion: reduce) {
+          .case-studies-marquee {
+            animation: none;
+          }
         }
       `}</style>
 
-      <div className="w-full max-w-[1183px]">
-        {/* Header */}
-        <div className="max-w-[940.5px] mx-auto text-center mb-12">
-          <p className="text-[16.6px] leading-[19.2px] tracking-[-0.8px] text-white/60 font-semibold">
-            Features
-          </p>
-          <h2 className="text-[39.2px] leading-[54.6px] tracking-[-1.68px] text-white mt-2">
+      {/* ============================================================
+          MAIN CONTAINER
+      ============================================================ */}
+      <div
+        className="
+          mx-auto
+          flex
+          w-full
+          max-w-360
+          flex-col
+
+          py-16
+
+          sm:py-20
+
+          lg:py-24
+        "
+      >
+        {/* ============================================================
+            HEADER
+        ============================================================ */}
+        <motion.div
+          variants={headerVariants}
+          initial="hidden"
+          whileInView="show"
+          viewport={{
+            once: true,
+            amount: 0.4,
+          }}
+          className="
+            mx-auto
+            mb-10
+
+            flex
+            w-full
+            flex-col
+            items-center
+
+            gap-2.5
+
+            px-5
+
+            text-center
+
+            sm:px-8
+
+            lg:px-px
+          "
+        >
+          <h2
+            className="
+              font-space
+              font-bold
+              tracking-normal
+              text-white
+
+              text-[40px]
+              leading-11.5
+
+              sm:text-[48px]
+              sm:leading-13.5
+
+              md:text-[56px]
+              md:leading-15.5
+
+              lg:text-[64px]
+              lg:leading-17.5
+            "
+          >
             Our Case studies
           </h2>
-          <p className="text-[13.9px] leading-[16.8px] tracking-[-0.7px] text-white/60 mt-2">
-            We'll handle the hard stuff.
-          </p>
-        </div>
 
-        {/* Infinite scroll strip */}
-        <div className="w-full overflow-hidden relative">
-          {/* Left black glow */}
-          <div className="absolute left-0 top-0 bottom-0 w-32 pointer-events-none z-10 bg-gradient-to-r from-[#010101] via-[#010101]/50 to-transparent" />
-          
-          {/* Right black glow */}
-          <div className="absolute right-0 top-0 bottom-0 w-32 pointer-events-none z-10 bg-gradient-to-l from-[#010101] via-[#010101]/50 to-transparent" />
+          <p
+            className="
+              font-sans
+              font-normal
+              text-white/70
 
-          {/*
-            Render cards.length * COPIES cards total (e.g. 3 * 4 = 12 cards).
-            The animation shifts exactly one set (3 cards = totalShift px),
-            so the loop point is invisible — card[0] of the next set is
-            pixel-identical to where card[0] started.
-          */}
-          <div
-            className="marquee-track flex"
-            style={{ gap: GAP, width: "max-content" }}
+              text-[13px]
+              leading-4.75
+              tracking-[-0.4px]
+
+              sm:text-[14px]
+
+              lg:text-[15.9px]
+              lg:leading-[19.2px]
+              lg:tracking-[-0.8px]
+            "
           >
-            {Array.from({ length: COPIES }).flatMap((_, ci) =>
-              cards.map((item, i) => <Card key={`${ci}-${i}`} item={item} />)
-            )}
-          </div>
-        </div>
+            We&apos;ll handle the hard stuff.
+          </p>
+        </motion.div>
 
-        {/* Button */}
-        <div className="flex justify-center mt-10">
-          <button className="btn-shadow w-[167px] h-[36px] rounded-[8px] border border-[#1C1C1C33] text-white text-[13.8px] leading-[15.4px] font-medium hover:bg-white/5 transition cursor-pointer">
-            Talk to a Founder ↗
+        {/* ============================================================
+            INFINITE CASE STUDY MARQUEE
+
+            Hover:
+            pauses exactly where it currently is.
+
+            Mouse leave:
+            continues from the exact same position.
+        ============================================================ */}
+        <motion.div
+          variants={carouselVariants}
+          initial="hidden"
+          whileInView="show"
+          viewport={{
+            once: true,
+            amount: 0.15,
+          }}
+          onMouseEnter={() =>
+            setIsCarouselPaused(true)
+          }
+          onMouseLeave={() =>
+            setIsCarouselPaused(false)
+          }
+          className="
+            relative
+            w-full
+            overflow-hidden
+          "
+        >
+          {/* Left fade */}
+          <div
+            aria-hidden="true"
+            className="
+              pointer-events-none
+              absolute
+              inset-y-0
+              left-0
+              z-20
+
+              w-10
+
+              bg-linear-to-r
+              from-[#010101]
+              via-[#010101]/80
+              to-transparent
+
+              sm:w-20
+
+              lg:w-32
+            "
+          />
+
+          {/* Right fade */}
+          <div
+            aria-hidden="true"
+            className="
+              pointer-events-none
+              absolute
+              inset-y-0
+              right-0
+              z-20
+
+              w-10
+
+              bg-linear-to-l
+              from-[#010101]
+              via-[#010101]/80
+              to-transparent
+
+              sm:w-20
+
+              lg:w-32
+            "
+          />
+
+          {/* ========================================================
+              MOVING TRACK
+
+              Two identical CardGroups create the seamless loop.
+          ======================================================== */}
+          <div
+            className="
+              case-studies-marquee
+              flex
+              w-max
+            "
+            style={{
+              animationPlayState:
+                isCarouselPaused
+                  ? 'paused'
+                  : 'running',
+            }}
+          >
+            <CardGroup />
+            <CardGroup />
+          </div>
+        </motion.div>
+
+        {/* ============================================================
+            CTA BUTTON
+        ============================================================ */}
+        <motion.div
+          variants={buttonVariants}
+          initial="hidden"
+          whileInView="show"
+          viewport={{
+            once: true,
+            amount: 0.5,
+          }}
+          className="
+            mt-16
+            flex
+            justify-center
+            px-5
+          "
+        >
+          <button
+            type="button"
+            className="
+              flex
+              min-h-9.5
+              cursor-pointer
+              items-center
+              justify-center
+              gap-2.5
+
+              rounded-[10px]
+
+              border
+              border-[#FFFFFF26]
+
+              bg-[#8C45FF66]
+
+              px-12
+              py-1.5
+
+              font-sans
+              text-[14px]
+              font-normal
+              leading-6.5
+              tracking-[-0.01em]
+              text-white
+
+              shadow-[inset_0_0_6px_3px_#FFFFFF40]
+
+              backdrop-blur-[14px]
+
+              transition-[background-color,border-color,box-shadow]
+              duration-300
+
+              hover:border-[#FFFFFF40]
+              hover:bg-[#8C45FF80]
+              hover:shadow-[inset_0_0_6px_3px_#FFFFFF40,0_0_24px_rgba(140,69,255,0.20)]
+
+              focus-visible:outline-none
+              focus-visible:ring-2
+              focus-visible:ring-[#8C45FF]/70
+              focus-visible:ring-offset-2
+              focus-visible:ring-offset-[#010101]
+            "
+          >
+            Talk to Founder
           </button>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

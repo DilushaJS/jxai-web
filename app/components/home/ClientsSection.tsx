@@ -149,14 +149,14 @@ function ArrowButton({
         group
 
         flex
-        size-[60px]
+        size-15
         shrink-0
         items-center
         justify-center
 
         rounded-full
         bg-white
-        p-[10px]
+        p-2.5
 
         shadow-[0_8px_30px_rgba(0,0,0,0.18)]
 
@@ -241,8 +241,8 @@ export default function ClientsSection() {
           relative
           mx-auto
           w-full
-          max-w-[1440px]
-          overflow-hidden
+          max-w-360
+          overflow-visible
 
           pt-16
 
@@ -267,7 +267,7 @@ export default function ClientsSection() {
             mx-auto
             flex
             w-full
-            max-w-[1126px]
+            max-w-281.5
             flex-col
             items-center
 
@@ -293,16 +293,16 @@ export default function ClientsSection() {
               text-white
 
               text-[40px]
-              leading-[46px]
+              leading-11.5
 
               sm:text-[48px]
-              sm:leading-[54px]
+              sm:leading-13.5
 
               md:text-[56px]
-              md:leading-[62px]
+              md:leading-15.5
 
               lg:text-[64px]
-              lg:leading-[70px]
+              lg:leading-17.5
             "
           >
             Our clients
@@ -311,14 +311,14 @@ export default function ClientsSection() {
           {/* Description */}
           <p
             className="
-              max-w-[650px]
+              max-w-162.5
 
               font-sans
               font-normal
               text-white/70
 
               text-[13px]
-              leading-[19px]
+              leading-4.75
               tracking-[-0.4px]
 
               sm:text-[14px]
@@ -368,13 +368,18 @@ export default function ClientsSection() {
             className="
               pointer-events-none
               absolute
-              inset-0
+              left-1/2
+              top-0
               z-0
+
+              h-full
+              w-screen
+              -translate-x-1/2
 
               opacity-100
 
-              [background-image:url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2216%22%20height=%2216%22%20viewBox=%220%200%2016%2016%22%3E%3Crect%20width=%2212%22%20height=%2212%22%20rx=%222%22%20fill=%22%232F2F2F%22%20fill-opacity=%220.2%22/%3E%3C/svg%3E')]
-              [background-repeat:repeat]
+              bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%2216%22%20height=%2216%22%20viewBox=%220%200%2016%2016%22%3E%3Crect%20width=%2212%22%20height=%2212%22%20rx=%222%22%20fill=%22%232F2F2F%22%20fill-opacity=%220.2%22/%3E%3C/svg%3E')]
+              bg-repeat
             "
           />
 
@@ -386,10 +391,10 @@ export default function ClientsSection() {
               absolute
               inset-x-0
               top-0
-              z-[1]
+              z-1
               h-24
 
-              bg-gradient-to-b
+              bg-linear-to-b
               from-[#010101]
               to-transparent
             "
@@ -403,10 +408,10 @@ export default function ClientsSection() {
               absolute
               inset-x-0
               bottom-0
-              z-[1]
+              z-1
               h-20
 
-              bg-gradient-to-t
+              bg-linear-to-t
               from-[#010101]
               to-transparent
             "
@@ -437,7 +442,7 @@ export default function ClientsSection() {
 
               mx-auto
               w-full
-              max-w-[1142px]
+              max-w-285.5
 
               px-5
 
@@ -476,7 +481,7 @@ export default function ClientsSection() {
                 relative
                 w-full
 
-                rounded-[24px]
+                rounded-3xl
 
                 bg-[linear-gradient(209.98deg,#60485B_0.03%,#2B212F_45.28%,#4B3A65_98.07%)]
 
@@ -518,7 +523,7 @@ export default function ClientsSection() {
 
                     z-0
 
-                    size-[180px]
+                    size-45
 
                     -translate-x-1/2
 
@@ -529,7 +534,7 @@ export default function ClientsSection() {
                     blur-[30px]
                     backdrop-blur-[151.49356079101562px]
 
-                    sm:size-[212px]
+                    sm:size-53
 
                     lg:left-[69%]
                   "
@@ -575,7 +580,7 @@ export default function ClientsSection() {
                       className="
                         flex
                         w-full
-                        max-w-[517px]
+                        max-w-129.25
                         flex-col
 
                         gap-4
@@ -594,10 +599,10 @@ export default function ClientsSection() {
                           text-white
 
                           text-[18px]
-                          leading-[25px]
+                          leading-6.25
 
                           sm:text-[20px]
-                          sm:leading-[27px]
+                          sm:leading-6.75
 
                           lg:text-[24px]
                           lg:leading-[29.6px]
@@ -615,10 +620,10 @@ export default function ClientsSection() {
                             text-[#CFCDD6]
 
                             text-[15px]
-                            leading-[25px]
+                            leading-6.25
 
                             sm:text-[16px]
-                            sm:leading-[27px]
+                            sm:leading-6.75
 
                             lg:text-[18px]
                             lg:leading-[29.6px]
@@ -634,10 +639,10 @@ export default function ClientsSection() {
                             text-[#CFCDD6]
 
                             text-[15px]
-                            leading-[25px]
+                            leading-6.25
 
                             sm:text-[16px]
-                            sm:leading-[27px]
+                            sm:leading-6.75
 
                             lg:text-[18px]
                             lg:leading-[29.6px]
@@ -653,10 +658,10 @@ export default function ClientsSection() {
                             text-[#C281FF]
 
                             text-[15px]
-                            leading-[25px]
+                            leading-6.25
 
                             sm:text-[16px]
-                            sm:leading-[27px]
+                            sm:leading-6.75
 
                             lg:text-[18px]
                             lg:leading-[29.6px]
@@ -680,11 +685,11 @@ export default function ClientsSection() {
 
                         rounded-[20px]
 
-                        size-[160px]
+                        size-40
 
-                        sm:size-[190px]
+                        sm:size-47.5
 
-                        lg:size-[217px]
+                        lg:size-54.25
                       "
                     >
                       <Image
