@@ -1,10 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { motion, type Variants } from 'framer-motion';
 import Image from 'next/image';
+import { motion, type Variants } from 'framer-motion';
 
-import IconStrip from '../common/IconStrip';
+import PurpleEnergyRing from '../common/PurpleEnergyRing/PurpleEnergyRing';
 
 /* ============================================================
    ANIMATION VARIANTS
@@ -24,9 +24,11 @@ const fadeUpVariants: Variants = {
     opacity: 0,
     y: 30,
   },
+
   show: {
     opacity: 1,
     y: 0,
+
     transition: {
       duration: 0.6,
       ease: [0.22, 1, 0.36, 1],
@@ -34,16 +36,18 @@ const fadeUpVariants: Variants = {
   },
 };
 
-const videoVariants: Variants = {
+const ringVariants: Variants = {
   hidden: {
     opacity: 0,
-    scale: 1.04,
+    scale: 1.035,
   },
+
   show: {
     opacity: 1,
     scale: 1,
+
     transition: {
-      duration: 1,
+      duration: 1.1,
       ease: [0.22, 1, 0.36, 1],
     },
   },
@@ -56,31 +60,30 @@ export default function Hero() {
           HERO STAGE
 
           Figma desktop:
-          1440 × 884.97
+          1440 × 885
       ============================================================ */}
+
       <div
         className="
           relative
           mx-auto
           w-full
-          max-w-360
+          max-w-[1440px]
           overflow-hidden
 
-          h-170
-          sm:h-180
-          md:h-195
+          h-[680px]
+          sm:h-[720px]
+          md:h-[780px]
 
           lg:h-auto
-          lg:aspect-1440/885
+          lg:aspect-[1440/885]
         "
       >
         {/* ============================================================
             LAYER 1
             HERO MESH
-            1440 × 884.97
-
-            Behind everything
         ============================================================ */}
+
         <div
           aria-hidden="true"
           className="
@@ -90,79 +93,49 @@ export default function Hero() {
             z-0
 
             bg-[url('/images/home/hero-mesh.svg')]
+            bg-cover
             bg-center
             bg-no-repeat
-            bg-cover
 
-            lg:bg-size-[100%_100%]
+            lg:bg-[length:100%_100%]
           "
         />
 
         {/* ============================================================
             LAYER 2
-            HERO RING VIDEO
-            740 × 740
+            PURPLE ENERGY RING
+
+            Replaces hero-ring.mp4
         ============================================================ */}
+
         <motion.div
-          variants={videoVariants}
+          variants={ringVariants}
           initial="hidden"
           animate="show"
-          aria-hidden="true"
           className="
-            pointer-events-none
             absolute
             left-1/2
-            z-10
-
             top-[47%]
-            -translate-x-1/2
-            -translate-y-1/2
+            z-10
 
             aspect-square
 
-            w-[92vw]
-            max-w-140
+            w-[clamp(400px,72vw,740px)]
 
-            overflow-hidden
-            rounded-full
+            -translate-x-1/2
+            -translate-y-1/2
 
-            sm:w-[78vw]
-            sm:max-w-152.5
-
-            md:w-[70vw]
-            md:max-w-170
-
-            lg:top-[48%]
-            lg:w-[51.4%]
-            lg:max-w-185
+            md:top-[48%]
           "
         >
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            className="
-              block
-              h-full
-              w-full
-              object-cover
-
-              motion-reduce:hidden
-            "
-          >
-            <source src="/videos/hero-ring.mp4" type="video/mp4" />
-          </video>
+          <PurpleEnergyRing className="h-full w-full" />
         </motion.div>
 
         {/* ============================================================
             LAYER 3
             HERO FOREGROUND / DECORATIONS
-            1289 × 731
-
-            Above video
         ============================================================ */}
+
         <div
           aria-hidden="true"
           className="
@@ -172,7 +145,7 @@ export default function Hero() {
             top-[47%]
             z-20
 
-            aspect-1289/731
+            aspect-[1289/731]
 
             w-[118%]
             max-w-none
@@ -191,7 +164,7 @@ export default function Hero() {
 
             lg:top-[48%]
             lg:w-[89.5%]
-            lg:max-w-322.25
+            lg:max-w-[1289px]
           "
         />
 
@@ -199,6 +172,7 @@ export default function Hero() {
             LAYER 4
             HERO CONTENT
         ============================================================ */}
+
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -215,21 +189,24 @@ export default function Hero() {
             justify-center
 
             px-4
-            pb-25
+            pb-[100px]
 
             text-center
 
             sm:px-6
-            sm:pb-27.5
+            sm:pb-[110px]
 
             md:px-8
-            md:pb-30
+            md:pb-[120px]
 
             lg:px-10
-            lg:pb-26.25
+            lg:pb-[105px]
           "
         >
-          {/* Backed by */}
+          {/* ========================================================
+              BACKED BY
+          ======================================================== */}
+
           <motion.div
             variants={fadeUpVariants}
             className="pointer-events-auto"
@@ -241,6 +218,7 @@ export default function Hero() {
                 justify-center
 
                 rounded-lg
+
                 border
                 border-[#171717]
 
@@ -251,7 +229,7 @@ export default function Hero() {
 
                 text-[10px]
                 font-normal
-                leading-3.5
+                leading-[14px]
                 tracking-[-0.4px]
                 text-white/60
 
@@ -273,14 +251,16 @@ export default function Hero() {
           {/* ========================================================
               TITLE
           ======================================================== */}
+
           <motion.h1
             variants={fadeUpVariants}
             className="
               pointer-events-auto
 
               mt-4
+
               w-full
-              max-w-287.5
+              max-w-[1150px]
 
               text-[38px]
               font-normal
@@ -304,21 +284,22 @@ export default function Hero() {
           {/* ========================================================
               DESCRIPTION
           ======================================================== */}
+
           <motion.p
             variants={fadeUpVariants}
             className="
               pointer-events-auto
 
               mt-4
-              max-w-155
+              max-w-[620px]
 
               text-[12px]
-              leading-4.5
+              leading-[18px]
               tracking-[-0.03em]
               text-white/70
 
               sm:text-[13px]
-              sm:leading-4.75
+              sm:leading-[19px]
 
               md:text-[14px]
               md:leading-5
@@ -335,12 +316,14 @@ export default function Hero() {
           {/* ========================================================
               CTA
           ======================================================== */}
+
           <motion.div
             variants={fadeUpVariants}
             className="
               pointer-events-auto
 
               mt-6
+
               flex
               items-center
               justify-center
@@ -385,6 +368,7 @@ export default function Hero() {
               style={{
                 background:
                   'linear-gradient(180deg, rgba(69, 69, 69, 0.2) 0%, #1F1F1F 100%)',
+
                 boxShadow: `
                   0px 0.6px 1.57px -1.17px #48588AAD inset,
                   0px 2.29px 5.95px -2.33px #48588A9C inset,
