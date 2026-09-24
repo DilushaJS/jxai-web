@@ -385,7 +385,7 @@ export default function AdvantagesSection() {
                         min-h-12.5
                         w-full
                         items-center
-                        gap-4.5
+                        gap-3
                         text-left
                         cursor-pointer
                       "
@@ -393,7 +393,7 @@ export default function AdvantagesSection() {
                       {/* Line */}
                       <motion.span
                         animate={{
-                          width: isActive ? 52 : 30,
+                          width: isActive ? 48 : 30,
                           backgroundColor: isActive
                             ? '#C281FF'
                             : '#555555',

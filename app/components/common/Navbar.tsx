@@ -16,7 +16,24 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full py-2 sm:py-3 bg-[#010101] backdrop-blur-md px-2 sm:px-3">
-      <div className="mx-auto flex min-h-[52px] sm:min-h-14 flex-col gap-3 sm:h-14 sm:flex-row sm:items-center sm:justify-between sm:gap-2 sm:px-9 max-w-[1440px]">
+      <div
+        className="
+          mx-auto
+          flex
+          min-h-13
+          max-w-360
+          flex-col
+          gap-3
+
+          sm:grid
+          sm:h-14
+          sm:min-h-14
+          sm:grid-cols-[1fr_auto_1fr]
+          sm:items-center
+          sm:gap-2
+          sm:px-9
+        "
+      >
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center">
             <Image
@@ -49,9 +66,36 @@ export default function Navbar() {
         </div>
         <nav
           id="mobile-nav"
-          className={`${
-            isOpen ? 'flex' : 'hidden'
-          } flex-1 flex-col items-center gap-2 sm:gap-3 rounded-xl border border-white/10 bg-white/5 px-3 sm:px-4 py-3 sm:py-4 text-[12px] sm:text-[13.9px] leading-[18px] sm:leading-[21px] tracking-[-0.28px] text-white sm:flex sm:flex-row sm:justify-center sm:gap-x-8 sm:border-none sm:bg-transparent sm:px-0 sm:py-0`}
+          className={`
+            ${isOpen ? 'flex' : 'hidden'}
+
+            flex-col
+            items-center
+            gap-2
+            rounded-xl
+            border
+            border-white/10
+            bg-white/5
+            px-3
+            py-3
+
+            text-[12px]
+            leading-4.5
+            tracking-[-0.28px]
+            text-white
+
+            sm:flex
+            sm:flex-row
+            sm:justify-center
+            sm:gap-x-8
+            sm:justify-self-center
+            sm:border-none
+            sm:bg-transparent
+            sm:px-0
+            sm:py-0
+            sm:text-[13.9px]
+            sm:leading-5.25
+          `}
         >
           {navLinks.map((link) => (
             <Link
@@ -64,13 +108,21 @@ export default function Navbar() {
           ))}
         </nav>
         <div
-          className={`${
-            isOpen ? 'flex' : 'hidden'
-          } w-full sm:w-auto items-center justify-center sm:flex`}
+          className={`
+            ${isOpen ? 'flex' : 'hidden'}
+
+            w-full
+            items-center
+            justify-center
+
+            sm:flex
+            sm:w-auto
+            sm:justify-self-end
+          `}
         >
           <Link
             href="/dashboard"
-            className="w-full sm:w-auto rounded-md px-3 sm:px-4 py-2 sm:py-2 text-center text-[12px] sm:text-[13.9px] font-semibold leading-[18px] sm:leading-[21px] tracking-[-0.28px] text-[#191A1F] transition-transform duration-200 hover:-translate-y-0.5"
+            className="w-full sm:w-auto rounded-md px-3 sm:px-4 py-2 sm:py-2 text-center text-[12px] sm:text-[13.9px] font-semibold leading-4.5 sm:leading-5.25 tracking-[-0.28px] text-[#191A1F] transition-transform duration-200 hover:-translate-y-0.5"
             style={{
               background:
                 'linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%)',
