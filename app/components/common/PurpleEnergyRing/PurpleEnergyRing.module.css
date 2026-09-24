@@ -1,7 +1,5 @@
 /* ============================================================
    ROOT
-
-   Hero.tsx controls actual component dimensions.
 ============================================================ */
 
 .ring {
@@ -14,72 +12,35 @@
 
   isolation: isolate;
 
+  overflow: visible;
+
   pointer-events: auto;
 
   user-select: none;
 
-  overflow: visible;
+  --deep-purple: #16004a;
+  --dark-purple: #26006b;
+  --purple: #4b16a0;
+  --violet: #6d2cc9;
+  --highlight: #8b55e8;
+  --lavender: #a77aff;
 }
 
 
 /* ============================================================
-   HOVER SCALE
+   ATMOSPHERE
 
-   Very subtle expansion only.
+   Very subtle. The middle stays dark/transparent looking.
 ============================================================ */
 
-.orbitScale {
-  position: absolute;
-
-  inset: 0;
-
-  transform: scale(1);
-
-  transform-origin: center;
-
-  transition:
-    transform 700ms
-    cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-
-.ring:hover .orbitScale {
-  transform: scale(1.025);
-}
-
-
-/* ============================================================
-   SLOW ORBIT
-
-   This rotates the generated artwork very slowly.
-============================================================ */
-
-.orbitMotion {
-  position: absolute;
-
-  inset: 0;
-
-  transform-origin: center;
-
-  animation:
-    orbitRotate 46s linear infinite;
-
-  will-change: transform;
-}
-
-
-/* ============================================================
-   CENTER GLOW
-============================================================ */
-
-.centerGlow {
+.atmosphere {
   position: absolute;
 
   left: 50%;
   top: 50%;
 
-  width: 27%;
-  aspect-ratio: 1 / 1;
+  width: 68%;
+  height: 68%;
 
   transform:
     translate(-50%, -50%);
@@ -87,222 +48,566 @@
   border-radius: 50%;
 
   background:
-    linear-gradient(
-      180deg,
-      #461978 0%,
-      #a85aff 100%
-    );
-
-  filter:
-    blur(
-      clamp(
-        85px,
-        12vw,
-        204px
-      )
-    );
-
-  opacity: 0.48;
-
-  z-index: 0;
-
-  pointer-events: none;
-}
-
-
-/* ============================================================
-   INNER ATMOSPHERE
-============================================================ */
-
-.innerAtmosphere {
-  position: absolute;
-
-  inset: 18%;
-
-  border-radius: 50%;
-
-  background:
     radial-gradient(
-      circle at center,
-
-      rgba(
-        71,
-        19,
-        126,
-        0.18
-      )
-      0%,
-
-      rgba(
-        40,
-        7,
-        75,
-        0.11
-      )
-      36%,
-
-      rgba(
-        18,
-        2,
-        39,
-        0.045
-      )
-      61%,
-
-      transparent
-      78%
+      circle,
+      rgba(91, 31, 159, 0.11) 0%,
+      rgba(57, 12, 112, 0.07) 38%,
+      rgba(24, 2, 52, 0.025) 62%,
+      transparent 75%
     );
 
   filter:
-    blur(34px);
-
-  z-index: 0;
+    blur(42px);
 
   pointer-events: none;
 }
 
 
 /* ============================================================
-   SHARED ENERGY IMAGE
+   HOVER WRAPPER
 ============================================================ */
 
-.energy {
-  object-fit: contain;
-
-  transform-origin: center;
-
-  pointer-events: none;
-
-  user-select: none;
-
-  will-change:
-    transform,
-    opacity;
-}
-
-
-/* ============================================================
-   MAIN RING
-============================================================ */
-
-.energyBase {
-  z-index: 3;
-
-  opacity: 0.9;
-
-  filter:
-    saturate(0.9)
-    brightness(0.93)
-    contrast(1.035)
-    drop-shadow(
-      0 0 7px
-      rgba(
-        109,
-        44,
-        201,
-        0.11
-      )
-    );
-
-  animation:
-    ringBreath
-    9s
-    ease-in-out
-    infinite;
-}
-
-
-/* ============================================================
-   GHOST A
-============================================================ */
-
-.energyGhostA {
-  z-index: 2;
-
-  opacity: 0.075;
-
-  filter:
-    blur(1.1px)
-    saturate(1.07)
-    brightness(1.02);
-
-  animation:
-    ghostA
-    14s
-    ease-in-out
-    infinite;
-}
-
-
-/* ============================================================
-   GHOST B
-============================================================ */
-
-.energyGhostB {
-  z-index: 4;
-
-  opacity: 0.04;
-
-  filter:
-    blur(0.45px)
-    saturate(1.1)
-    brightness(1.05);
-
-  animation:
-    ghostB
-    18s
-    ease-in-out
-    infinite;
-}
-
-
-/* ============================================================
-   HOVER ENERGY
-
-   Only small opacity changes.
-============================================================ */
-
-.ring:hover .energyBase {
-  opacity: 0.96;
-}
-
-
-.ring:hover .energyGhostA {
-  opacity: 0.13;
-}
-
-
-.ring:hover .energyGhostB {
-  opacity: 0.075;
-}
-
-
-/* ============================================================
-   PARTICLE LAYER
-============================================================ */
-
-.particles {
+.hoverScale {
   position: absolute;
 
-  /*
-   * Small overflow gives particles room
-   * slightly outside the artwork.
-   */
-  inset: -2%;
+  inset: 8%;
 
-  z-index: 6;
-
-  pointer-events: none;
+  transform:
+    scale(1);
 
   transform-origin: center;
 
-  animation:
-    particlesOrbit
-    64s
-    linear
-    infinite;
+  transition:
+    transform 900ms
+    cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+
+@media (hover: hover) and (pointer: fine) {
+  .ring:hover .hoverScale {
+    transform:
+      scale(1.035);
+  }
+}
+
+
+/* ============================================================
+   SHARED ROTATION LAYER
+============================================================ */
+
+.spinLayer {
+  position: absolute;
+
+  inset: 0;
+
+  transform-origin: center;
+
+  pointer-events: none;
 
   will-change: transform;
+}
+
+
+/* ============================================================
+   MASK
+
+   Each actual ring element uses this basic donut shape.
+============================================================ */
+
+.glowRing,
+.fabricRing,
+.colorBand {
+  position: absolute;
+
+  inset: 0;
+
+  border-radius:
+    48%
+    52%
+    49%
+    51%
+    /
+    51%
+    48%
+    52%
+    49%;
+
+  pointer-events: none;
+
+  -webkit-mask:
+    radial-gradient(
+      farthest-side,
+
+      transparent 0%,
+      transparent 76%,
+
+      #000 78%,
+      #000 86%,
+
+      transparent 91%
+    );
+
+  mask:
+    radial-gradient(
+      farthest-side,
+
+      transparent 0%,
+      transparent 76%,
+
+      #000 78%,
+      #000 86%,
+
+      transparent 91%
+    );
+}
+
+
+/* ============================================================
+   LARGE SOFT GLOW
+
+   This is where the moving purple blobs live.
+============================================================ */
+
+.glowRing {
+  inset: -3%;
+
+  background:
+    conic-gradient(
+      from 0deg,
+
+      rgba(22, 0, 74, 0.15) 0deg,
+
+      rgba(109, 44, 201, 0.35) 38deg,
+
+      rgba(167, 122, 255, 0.78) 67deg,
+
+      rgba(255, 255, 255, 0.78) 84deg,
+
+      rgba(139, 85, 232, 0.4) 110deg,
+
+      rgba(75, 22, 160, 0.15) 145deg,
+
+      rgba(32, 15, 92, 0.15) 180deg,
+
+      rgba(94, 55, 230, 0.62) 220deg,
+
+      rgba(198, 164, 255, 0.85) 247deg,
+
+      rgba(118, 218, 255, 0.35) 269deg,
+
+      rgba(74, 22, 160, 0.2) 300deg,
+
+      rgba(167, 122, 255, 0.64) 335deg,
+
+      rgba(22, 0, 74, 0.15) 360deg
+    );
+
+  filter:
+    blur(18px);
+
+  opacity: 0.78;
+
+  transform:
+    scale(1.035);
+}
+
+
+.glowSpin {
+  animation:
+    glowOrbit
+    8.5s
+    linear
+    infinite;
+}
+
+
+/* ============================================================
+   MAIN COLOR BAND
+
+   Sharper than the outer glow.
+============================================================ */
+
+.colorBand {
+  background:
+    conic-gradient(
+      from 15deg,
+
+      #3e128a 0deg,
+      #7d35dc 35deg,
+
+      #a77aff 60deg,
+      #f0e6ff 75deg,
+
+      #8b55e8 96deg,
+      #4b16a0 125deg,
+
+      #26006b 160deg,
+
+      #4b16a0 190deg,
+      #8b55e8 215deg,
+
+      #f4edff 238deg,
+      #b48cff 256deg,
+
+      #7048ff 280deg,
+
+      #3d117f 310deg,
+      #8b55e8 340deg,
+
+      #3e128a 360deg
+    );
+
+  opacity: 0.78;
+
+  filter:
+    blur(3.5px);
+
+  -webkit-mask:
+    radial-gradient(
+      farthest-side,
+
+      transparent 0%,
+      transparent 79.5%,
+
+      #000 81%,
+      #000 85%,
+
+      transparent 88%
+    );
+
+  mask:
+    radial-gradient(
+      farthest-side,
+
+      transparent 0%,
+      transparent 79.5%,
+
+      #000 81%,
+      #000 85%,
+
+      transparent 88%
+    );
+}
+
+
+.colorSpin {
+  animation:
+    colorOrbit
+    6.8s
+    linear
+    infinite;
+}
+
+
+/* ============================================================
+   SHEER FABRIC LAYERS
+
+   These prevent the result looking like a neon tube.
+============================================================ */
+
+.fabricRing {
+  opacity: 0.38;
+
+  mix-blend-mode: screen;
+
+  filter:
+    blur(5px);
+}
+
+
+/* -------------------------
+   FABRIC 1
+------------------------- */
+
+.fabric1 {
+  inset: -1% 2% 2% -2%;
+
+  background:
+    conic-gradient(
+      from 40deg,
+
+      transparent 0deg,
+      rgba(139, 85, 232, 0.13) 15deg,
+
+      rgba(187, 151, 255, 0.52) 55deg,
+
+      transparent 105deg,
+
+      rgba(75, 22, 160, 0.2) 150deg,
+
+      rgba(167, 122, 255, 0.48) 205deg,
+
+      transparent 255deg,
+
+      rgba(109, 44, 201, 0.28) 310deg,
+
+      transparent 360deg
+    );
+
+  border-radius:
+    44%
+    56%
+    51%
+    49%
+    /
+    54%
+    46%
+    57%
+    43%;
+
+  -webkit-mask:
+    radial-gradient(
+      farthest-side,
+
+      transparent 74%,
+      #000 77%,
+      #000 87%,
+      transparent 91%
+    );
+
+  mask:
+    radial-gradient(
+      farthest-side,
+
+      transparent 74%,
+      #000 77%,
+      #000 87%,
+      transparent 91%
+    );
+}
+
+
+.fabricSpin1 {
+  animation:
+    fabricOrbit1
+    11s
+    linear
+    infinite;
+}
+
+
+/* -------------------------
+   FABRIC 2
+------------------------- */
+
+.fabric2 {
+  inset: 2% -2% -1% 1%;
+
+  background:
+    conic-gradient(
+      from -30deg,
+
+      transparent 0deg,
+
+      rgba(92, 37, 181, 0.2) 30deg,
+
+      transparent 75deg,
+
+      rgba(167, 122, 255, 0.48) 120deg,
+
+      rgba(225, 207, 255, 0.4) 150deg,
+
+      transparent 190deg,
+
+      rgba(75, 22, 160, 0.18) 230deg,
+
+      transparent 285deg,
+
+      rgba(139, 85, 232, 0.46) 335deg,
+
+      transparent 360deg
+    );
+
+  border-radius:
+    56%
+    44%
+    48%
+    52%
+    /
+    47%
+    55%
+    45%
+    53%;
+
+  -webkit-mask:
+    radial-gradient(
+      farthest-side,
+
+      transparent 77%,
+      #000 79%,
+      #000 89%,
+      transparent 92%
+    );
+
+  mask:
+    radial-gradient(
+      farthest-side,
+
+      transparent 77%,
+      #000 79%,
+      #000 89%,
+      transparent 92%
+    );
+}
+
+
+.fabricSpin2 {
+  animation:
+    fabricOrbit2
+    15s
+    linear
+    infinite;
+}
+
+
+/* -------------------------
+   FABRIC 3
+------------------------- */
+
+.fabric3 {
+  inset: -2% -1% 2% 2%;
+
+  background:
+    conic-gradient(
+      from 90deg,
+
+      transparent 0deg,
+
+      rgba(167, 122, 255, 0.35) 40deg,
+
+      transparent 80deg,
+
+      rgba(109, 44, 201, 0.18) 125deg,
+
+      rgba(231, 219, 255, 0.43) 185deg,
+
+      transparent 230deg,
+
+      rgba(139, 85, 232, 0.38) 290deg,
+
+      transparent 360deg
+    );
+
+  border-radius:
+    51%
+    49%
+    56%
+    44%
+    /
+    43%
+    57%
+    48%
+    52%;
+
+  -webkit-mask:
+    radial-gradient(
+      farthest-side,
+
+      transparent 75%,
+      #000 78%,
+      #000 86%,
+      transparent 91%
+    );
+
+  mask:
+    radial-gradient(
+      farthest-side,
+
+      transparent 75%,
+      #000 78%,
+      #000 86%,
+      transparent 91%
+    );
+}
+
+
+.fabricSpin3 {
+  animation:
+    fabricOrbit3
+    19s
+    linear
+    infinite;
+}
+
+
+/* ============================================================
+   BRIGHT INNER RIM
+
+   This creates the white/lavender hot edge visible
+   in your reference.
+============================================================ */
+
+.hotRim {
+  position: absolute;
+
+  inset: 8%;
+
+  border-radius:
+    50%
+    50%
+    48%
+    52%
+    /
+    51%
+    49%
+    52%
+    48%;
+
+  border:
+    clamp(1.5px, 0.24vw, 2.6px)
+    solid
+    rgba(248, 243, 255, 0.9);
+
+  box-shadow:
+    0 0 3px rgba(255, 255, 255, 0.85),
+    0 0 7px rgba(208, 180, 255, 0.5),
+    0 0 12px rgba(139, 85, 232, 0.2);
+
+  opacity: 0.82;
+
+  pointer-events: none;
+
+  animation:
+    rimMorph
+    5.5s
+    ease-in-out
+    infinite;
+}
+
+
+/* ============================================================
+   VERY FINE FIBER
+============================================================ */
+
+.fineRim {
+  position: absolute;
+
+  inset: 7.5%;
+
+  border-radius:
+    49%
+    51%
+    52%
+    48%
+    /
+    52%
+    48%
+    49%
+    51%;
+
+  border:
+    0.6px solid
+    rgba(190, 151, 255, 0.55);
+
+  opacity: 0.55;
+
+  pointer-events: none;
+
+  animation:
+    fineOrbit
+    13s
+    linear
+    infinite reverse;
 }
 
 
@@ -310,64 +615,47 @@
    PARTICLES
 ============================================================ */
 
-.particle {
+.particles {
   position: absolute;
 
-  border-radius: 9999px;
+  inset: -1%;
 
-  background:
-    rgba(
-      233,
-      220,
-      255,
-      0.94
-    );
+  z-index: 10;
 
-  opacity:
-    var(
-      --particle-opacity,
-      0.6
-    );
-
-  box-shadow:
-    0 0 3px
-    rgba(
-      233,
-      220,
-      255,
-      0.68
-    ),
-
-    0 0 7px
-    rgba(
-      167,
-      122,
-      255,
-      0.38
-    );
-
-  transform:
-    translate(
-      -50%,
-      -50%
-    )
-    scale(1);
+  pointer-events: none;
 
   transform-origin: center;
 
-  transition:
-    transform
-    900ms
-    cubic-bezier(
-      0.16,
-      1,
-      0.3,
-      1
-    ),
+  animation:
+    particleOrbit
+    55s
+    linear
+    infinite;
+}
 
-    opacity
-    350ms
-    ease;
+
+.particle {
+  position: absolute;
+
+  border-radius: 50%;
+
+  background:
+    rgba(235, 222, 255, 0.95);
+
+  opacity:
+    var(--particle-opacity);
+
+  box-shadow:
+    0 0 3px rgba(255, 255, 255, 0.65),
+    0 0 7px rgba(167, 122, 255, 0.42);
+
+  transform:
+    translate(-50%, -50%)
+    scale(1);
+
+  transition:
+    transform 850ms
+    cubic-bezier(0.16, 1, 0.3, 1);
 
   transition-delay:
     var(--particle-delay);
@@ -380,84 +668,100 @@
 }
 
 
-/* ============================================================
-   BRIGHT PARTICLES
-============================================================ */
-
 .particleBright {
-  background:
-    #ffffff;
+  background: #ffffff;
 
   box-shadow:
-    0 0 4px
-    rgba(
-      255,
-      255,
-      255,
-      0.95
-    ),
+    0 0 4px rgba(255, 255, 255, 1),
+    0 0 10px rgba(190, 151, 255, 0.8),
+    0 0 18px rgba(139, 85, 232, 0.38);
+}
 
-    0 0 9px
-    rgba(
-      186,
-      142,
-      255,
-      0.85
-    ),
 
-    0 0 15px
-    rgba(
-      139,
-      85,
-      232,
-      0.3
-    );
+@media (hover: hover) and (pointer: fine) {
+  .ring:hover .particle {
+    transform:
+      translate(
+        calc(-50% + var(--scatter-x)),
+        calc(-50% + var(--scatter-y))
+      )
+      scale(1.15);
+  }
+
+
+  .ring:hover .particleBright {
+    transform:
+      translate(
+        calc(-50% + var(--scatter-x)),
+        calc(-50% + var(--scatter-y))
+      )
+      scale(1.4);
+  }
+
+
+  .ring:hover .glowRing {
+    opacity: 0.94;
+
+    filter:
+      blur(21px);
+  }
+
+
+  .ring:hover .fabricRing {
+    opacity: 0.52;
+  }
 }
 
 
 /* ============================================================
-   HOVER PARTICLE SCATTER
+   ANIMATIONS
 ============================================================ */
 
-.ring:hover .particle {
-  transform:
-    translate(
-      calc(
-        -50% +
-        var(--scatter-x)
-      ),
+/*
+ * Main diffused energy flow
+ */
+@keyframes glowOrbit {
+  0% {
+    transform:
+      rotate(0deg)
+      scaleX(1)
+      scaleY(0.985);
+  }
 
-      calc(
-        -50% +
-        var(--scatter-y)
-      )
-    )
-    scale(1.15);
+  25% {
+    transform:
+      rotate(90deg)
+      scaleX(1.018)
+      scaleY(0.995);
+  }
+
+  50% {
+    transform:
+      rotate(180deg)
+      scaleX(0.992)
+      scaleY(1.014);
+  }
+
+  75% {
+    transform:
+      rotate(270deg)
+      scaleX(1.012)
+      scaleY(0.99);
+  }
+
+  100% {
+    transform:
+      rotate(360deg)
+      scaleX(1)
+      scaleY(0.985);
+  }
 }
 
 
-.ring:hover .particleBright {
-  transform:
-    translate(
-      calc(
-        -50% +
-        var(--scatter-x)
-      ),
-
-      calc(
-        -50% +
-        var(--scatter-y)
-      )
-    )
-    scale(1.4);
-}
-
-
-/* ============================================================
-   MAIN ORBIT
-============================================================ */
-
-@keyframes orbitRotate {
+/*
+ * Main sharp color movement
+ */
+@keyframes colorOrbit {
   from {
     transform:
       rotate(0deg);
@@ -470,77 +774,152 @@
 }
 
 
-/* ============================================================
-   BREATHING
+/*
+ * Transparent sheer ribbons
+ */
+@keyframes fabricOrbit1 {
+  0% {
+    transform:
+      rotate(0deg)
+      scaleX(1)
+      scaleY(0.97);
+  }
 
-   Keep this extremely subtle.
-============================================================ */
+  50% {
+    transform:
+      rotate(180deg)
+      scaleX(1.035)
+      scaleY(1.01);
+  }
 
-@keyframes ringBreath {
+  100% {
+    transform:
+      rotate(360deg)
+      scaleX(1)
+      scaleY(0.97);
+  }
+}
+
+
+@keyframes fabricOrbit2 {
+  0% {
+    transform:
+      rotate(360deg)
+      scaleX(0.98)
+      scaleY(1.02);
+  }
+
+  50% {
+    transform:
+      rotate(180deg)
+      scaleX(1.025)
+      scaleY(0.975);
+  }
+
+  100% {
+    transform:
+      rotate(0deg)
+      scaleX(0.98)
+      scaleY(1.02);
+  }
+}
+
+
+@keyframes fabricOrbit3 {
+  0% {
+    transform:
+      rotate(20deg)
+      scaleX(1.015)
+      scaleY(0.98);
+  }
+
+  50% {
+    transform:
+      rotate(200deg)
+      scaleX(0.985)
+      scaleY(1.025);
+  }
+
+  100% {
+    transform:
+      rotate(380deg)
+      scaleX(1.015)
+      scaleY(0.98);
+  }
+}
+
+
+/*
+ * Inner white ring gently changes its silhouette.
+ */
+@keyframes rimMorph {
   0%,
   100% {
+    border-radius:
+      50%
+      50%
+      48%
+      52%
+      /
+      51%
+      49%
+      52%
+      48%;
+
     transform:
       scale(0.998);
   }
 
-  50% {
+  33% {
+    border-radius:
+      48%
+      52%
+      51%
+      49%
+      /
+      49%
+      53%
+      47%
+      51%;
+
     transform:
-      scale(1.006);
-  }
-}
-
-
-/* ============================================================
-   GHOST A
-============================================================ */
-
-@keyframes ghostA {
-  0%,
-  100% {
-    transform:
-      rotate(-1deg)
-      scaleX(1.006)
-      scaleY(0.996);
+      scaleX(1.005)
+      scaleY(0.998);
   }
 
-  50% {
+  66% {
+    border-radius:
+      52%
+      48%
+      49%
+      51%
+      /
+      53%
+      47%
+      51%
+      49%;
+
     transform:
-      rotate(1.4deg)
-      scaleX(0.995)
-      scaleY(1.008);
-  }
-}
-
-
-/* ============================================================
-   GHOST B
-============================================================ */
-
-@keyframes ghostB {
-  0%,
-  100% {
-    transform:
-      rotate(1deg)
-      scaleX(0.997)
+      scaleX(0.998)
       scaleY(1.005);
   }
+}
 
-  50% {
+
+@keyframes fineOrbit {
+  from {
     transform:
-      rotate(-1.2deg)
-      scaleX(1.007)
-      scaleY(0.996);
+      rotate(0deg);
+  }
+
+  to {
+    transform:
+      rotate(360deg);
   }
 }
 
 
-/* ============================================================
-   PARTICLE ORBIT
-
-   Opposite direction from ring.
-============================================================ */
-
-@keyframes particlesOrbit {
+@keyframes particleOrbit {
   from {
     transform:
       rotate(0deg);
@@ -553,132 +932,68 @@
 }
 
 
-/* ============================================================
-   PARTICLE TWINKLE
-
-   Only opacity.
-   Do NOT animate filter continuously.
-============================================================ */
-
 @keyframes particleTwinkle {
   0%,
   100% {
     opacity:
       calc(
-        var(
-          --particle-opacity,
-          0.6
-        ) *
-        0.45
+        var(--particle-opacity) *
+        0.4
       );
   }
 
   50% {
     opacity:
-      var(
-        --particle-opacity,
-        0.6
-      );
+      var(--particle-opacity);
   }
 }
 
 
 /* ============================================================
-   TABLET
-
-   Ring dimensions remain controlled by Hero.tsx.
+   RESPONSIVE
 ============================================================ */
 
 @media (max-width: 1024px) {
-  .centerGlow {
-    width: 26%;
+  .hoverScale {
+    inset: 7%;
+  }
 
+  .glowRing {
     filter:
-      blur(
-        clamp(
-          80px,
-          14vw,
-          165px
-        )
-      );
-
-    opacity: 0.46;
+      blur(15px);
   }
 }
 
 
-/* ============================================================
-   MOBILE
-============================================================ */
-
 @media (max-width: 640px) {
-  .centerGlow {
-    width: 28%;
-
-    filter:
-      blur(
-        clamp(
-          65px,
-          20vw,
-          125px
-        )
-      );
-
-    opacity: 0.4;
+  .hoverScale {
+    inset: 4%;
   }
 
+  .glowRing {
+    filter:
+      blur(11px);
+  }
 
-  /*
-   * Smaller visual expansion.
-   */
-  .ring:hover .orbitScale {
-    transform:
-      scale(1.015);
+  .fabricRing {
+    filter:
+      blur(3px);
+  }
+
+  .hotRim {
+    border-width:
+      1.4px;
   }
 }
 
 
 /* ============================================================
    TOUCH
-
-   Prevent sticky hover effects.
 ============================================================ */
 
 @media (hover: none) and (pointer: coarse) {
   .ring {
     pointer-events: none;
-  }
-
-
-  .ring:hover .orbitScale {
-    transform:
-      scale(1);
-  }
-
-
-  .ring:hover .particle,
-  .ring:hover .particleBright {
-    transform:
-      translate(
-        -50%,
-        -50%
-      )
-      scale(1);
-  }
-
-
-  .ring:hover .energyBase {
-    opacity: 0.9;
-  }
-
-
-  .ring:hover .energyGhostA {
-    opacity: 0.075;
-  }
-
-
-  .ring:hover .energyGhostB {
-    opacity: 0.04;
   }
 }
 
@@ -688,20 +1003,20 @@
 ============================================================ */
 
 @media (prefers-reduced-motion: reduce) {
-  .orbitMotion,
-  .energyBase,
-  .energyGhostA,
-  .energyGhostB,
+  .glowSpin,
+  .colorSpin,
+  .fabricSpin1,
+  .fabricSpin2,
+  .fabricSpin3,
+  .hotRim,
+  .fineRim,
   .particles,
   .particle {
-    animation:
-      none !important;
+    animation: none !important;
   }
 
-
-  .orbitScale,
+  .hoverScale,
   .particle {
-    transition:
-      none !important;
+    transition: none !important;
   }
 }
