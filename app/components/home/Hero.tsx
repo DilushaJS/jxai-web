@@ -222,6 +222,7 @@ export default function Hero() {
     <section className="relative w-full overflow-hidden bg-[#010101]">
       <div
         className="
+          hero-particle-field
           relative
           mx-auto
           w-full

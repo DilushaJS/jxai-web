@@ -28,9 +28,7 @@
 
 
 /* ============================================================
-   ATMOSPHERE
-
-   Very subtle. The middle stays dark/transparent looking.
+   BACKGROUND ATMOSPHERE
 ============================================================ */
 
 .atmosphere {
@@ -64,7 +62,7 @@
 
 
 /* ============================================================
-   HOVER WRAPPER
+   ENERGY RING WRAPPER
 ============================================================ */
 
 .hoverScale {
@@ -78,16 +76,14 @@
   transform-origin: center;
 
   transition:
-    transform 900ms
-    cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-
-@media (hover: hover) and (pointer: fine) {
-  .ring:hover .hoverScale {
-    transform:
-      scale(1.035);
-  }
+    transform
+    900ms
+    cubic-bezier(
+      0.16,
+      1,
+      0.3,
+      1
+    );
 }
 
 
@@ -109,9 +105,7 @@
 
 
 /* ============================================================
-   MASK
-
-   Each actual ring element uses this basic donut shape.
+   COMMON RING MASK
 ============================================================ */
 
 .glowRing,
@@ -163,9 +157,7 @@
 
 
 /* ============================================================
-   LARGE SOFT GLOW
-
-   This is where the moving purple blobs live.
+   LARGE DIFFUSED PURPLE GLOW
 ============================================================ */
 
 .glowRing {
@@ -175,31 +167,109 @@
     conic-gradient(
       from 0deg,
 
-      rgba(22, 0, 74, 0.15) 0deg,
+      rgba(
+        22,
+        0,
+        74,
+        0.15
+      )
+      0deg,
 
-      rgba(109, 44, 201, 0.35) 38deg,
+      rgba(
+        109,
+        44,
+        201,
+        0.35
+      )
+      38deg,
 
-      rgba(167, 122, 255, 0.78) 67deg,
+      rgba(
+        167,
+        122,
+        255,
+        0.78
+      )
+      67deg,
 
-      rgba(255, 255, 255, 0.78) 84deg,
+      rgba(
+        255,
+        255,
+        255,
+        0.78
+      )
+      84deg,
 
-      rgba(139, 85, 232, 0.4) 110deg,
+      rgba(
+        139,
+        85,
+        232,
+        0.4
+      )
+      110deg,
 
-      rgba(75, 22, 160, 0.15) 145deg,
+      rgba(
+        75,
+        22,
+        160,
+        0.15
+      )
+      145deg,
 
-      rgba(32, 15, 92, 0.15) 180deg,
+      rgba(
+        32,
+        15,
+        92,
+        0.15
+      )
+      180deg,
 
-      rgba(94, 55, 230, 0.62) 220deg,
+      rgba(
+        94,
+        55,
+        230,
+        0.62
+      )
+      220deg,
 
-      rgba(198, 164, 255, 0.85) 247deg,
+      rgba(
+        198,
+        164,
+        255,
+        0.85
+      )
+      247deg,
 
-      rgba(118, 218, 255, 0.35) 269deg,
+      rgba(
+        118,
+        218,
+        255,
+        0.35
+      )
+      269deg,
 
-      rgba(74, 22, 160, 0.2) 300deg,
+      rgba(
+        74,
+        22,
+        160,
+        0.2
+      )
+      300deg,
 
-      rgba(167, 122, 255, 0.64) 335deg,
+      rgba(
+        167,
+        122,
+        255,
+        0.64
+      )
+      335deg,
 
-      rgba(22, 0, 74, 0.15) 360deg
+      rgba(
+        22,
+        0,
+        74,
+        0.15
+      )
+      360deg
     );
 
   filter:
@@ -223,8 +293,6 @@
 
 /* ============================================================
    MAIN COLOR BAND
-
-   Sharper than the outer glow.
 ============================================================ */
 
 .colorBand {
@@ -233,25 +301,31 @@
       from 15deg,
 
       #3e128a 0deg,
+
       #7d35dc 35deg,
 
       #a77aff 60deg,
+
       #f0e6ff 75deg,
 
       #8b55e8 96deg,
+
       #4b16a0 125deg,
 
       #26006b 160deg,
 
       #4b16a0 190deg,
+
       #8b55e8 215deg,
 
       #f4edff 238deg,
+
       #b48cff 256deg,
 
       #7048ff 280deg,
 
       #3d117f 310deg,
+
       #8b55e8 340deg,
 
       #3e128a 360deg
@@ -300,9 +374,7 @@
 
 
 /* ============================================================
-   SHEER FABRIC LAYERS
-
-   These prevent the result looking like a neon tube.
+   SHEER FABRIC COMMON
 ============================================================ */
 
 .fabricRing {
@@ -315,31 +387,66 @@
 }
 
 
-/* -------------------------
+/* ============================================================
    FABRIC 1
-------------------------- */
+============================================================ */
 
 .fabric1 {
-  inset: -1% 2% 2% -2%;
+  inset:
+    -1%
+    2%
+    2%
+    -2%;
 
   background:
     conic-gradient(
       from 40deg,
 
       transparent 0deg,
-      rgba(139, 85, 232, 0.13) 15deg,
 
-      rgba(187, 151, 255, 0.52) 55deg,
+      rgba(
+        139,
+        85,
+        232,
+        0.13
+      )
+      15deg,
+
+      rgba(
+        187,
+        151,
+        255,
+        0.52
+      )
+      55deg,
 
       transparent 105deg,
 
-      rgba(75, 22, 160, 0.2) 150deg,
+      rgba(
+        75,
+        22,
+        160,
+        0.2
+      )
+      150deg,
 
-      rgba(167, 122, 255, 0.48) 205deg,
+      rgba(
+        167,
+        122,
+        255,
+        0.48
+      )
+      205deg,
 
       transparent 255deg,
 
-      rgba(109, 44, 201, 0.28) 310deg,
+      rgba(
+        109,
+        44,
+        201,
+        0.28
+      )
+      310deg,
 
       transparent 360deg
     );
@@ -360,8 +467,11 @@
       farthest-side,
 
       transparent 74%,
+
       #000 77%,
+
       #000 87%,
+
       transparent 91%
     );
 
@@ -370,8 +480,11 @@
       farthest-side,
 
       transparent 74%,
+
       #000 77%,
+
       #000 87%,
+
       transparent 91%
     );
 }
@@ -386,12 +499,16 @@
 }
 
 
-/* -------------------------
+/* ============================================================
    FABRIC 2
-------------------------- */
+============================================================ */
 
 .fabric2 {
-  inset: 2% -2% -1% 1%;
+  inset:
+    2%
+    -2%
+    -1%
+    1%;
 
   background:
     conic-gradient(
@@ -399,21 +516,51 @@
 
       transparent 0deg,
 
-      rgba(92, 37, 181, 0.2) 30deg,
+      rgba(
+        92,
+        37,
+        181,
+        0.2
+      )
+      30deg,
 
       transparent 75deg,
 
-      rgba(167, 122, 255, 0.48) 120deg,
+      rgba(
+        167,
+        122,
+        255,
+        0.48
+      )
+      120deg,
 
-      rgba(225, 207, 255, 0.4) 150deg,
+      rgba(
+        225,
+        207,
+        255,
+        0.4
+      )
+      150deg,
 
       transparent 190deg,
 
-      rgba(75, 22, 160, 0.18) 230deg,
+      rgba(
+        75,
+        22,
+        160,
+        0.18
+      )
+      230deg,
 
       transparent 285deg,
 
-      rgba(139, 85, 232, 0.46) 335deg,
+      rgba(
+        139,
+        85,
+        232,
+        0.46
+      )
+      335deg,
 
       transparent 360deg
     );
@@ -434,8 +581,11 @@
       farthest-side,
 
       transparent 77%,
+
       #000 79%,
+
       #000 89%,
+
       transparent 92%
     );
 
@@ -444,8 +594,11 @@
       farthest-side,
 
       transparent 77%,
+
       #000 79%,
+
       #000 89%,
+
       transparent 92%
     );
 }
@@ -460,12 +613,16 @@
 }
 
 
-/* -------------------------
+/* ============================================================
    FABRIC 3
-------------------------- */
+============================================================ */
 
 .fabric3 {
-  inset: -2% -1% 2% 2%;
+  inset:
+    -2%
+    -1%
+    2%
+    2%;
 
   background:
     conic-gradient(
@@ -473,17 +630,41 @@
 
       transparent 0deg,
 
-      rgba(167, 122, 255, 0.35) 40deg,
+      rgba(
+        167,
+        122,
+        255,
+        0.35
+      )
+      40deg,
 
       transparent 80deg,
 
-      rgba(109, 44, 201, 0.18) 125deg,
+      rgba(
+        109,
+        44,
+        201,
+        0.18
+      )
+      125deg,
 
-      rgba(231, 219, 255, 0.43) 185deg,
+      rgba(
+        231,
+        219,
+        255,
+        0.43
+      )
+      185deg,
 
       transparent 230deg,
 
-      rgba(139, 85, 232, 0.38) 290deg,
+      rgba(
+        139,
+        85,
+        232,
+        0.38
+      )
+      290deg,
 
       transparent 360deg
     );
@@ -504,8 +685,11 @@
       farthest-side,
 
       transparent 75%,
+
       #000 78%,
+
       #000 86%,
+
       transparent 91%
     );
 
@@ -514,8 +698,11 @@
       farthest-side,
 
       transparent 75%,
+
       #000 78%,
+
       #000 86%,
+
       transparent 91%
     );
 }
@@ -531,10 +718,7 @@
 
 
 /* ============================================================
-   BRIGHT INNER RIM
-
-   This creates the white/lavender hot edge visible
-   in your reference.
+   BLURRED WHITE / LAVENDER RIM
 ============================================================ */
 
 .hotRim {
@@ -553,19 +737,72 @@
     52%
     48%;
 
+  /*
+   * Soft core.
+   */
   border:
-    clamp(1.5px, 0.24vw, 2.6px)
+    clamp(
+      1.5px,
+      0.22vw,
+      2.4px
+    )
     solid
-    rgba(248, 243, 255, 0.9);
+    rgba(
+      255,
+      252,
+      255,
+      0.58
+    );
+
+  filter:
+    blur(1.7px);
 
   box-shadow:
-    0 0 3px rgba(255, 255, 255, 0.85),
-    0 0 7px rgba(208, 180, 255, 0.5),
-    0 0 12px rgba(139, 85, 232, 0.2);
+    0 0 5px
+      rgba(
+        255,
+        255,
+        255,
+        0.72
+      ),
 
-  opacity: 0.82;
+    0 0 12px
+      rgba(
+        246,
+        237,
+        255,
+        0.64
+      ),
+
+    0 0 24px
+      rgba(
+        216,
+        191,
+        255,
+        0.48
+      ),
+
+    0 0 44px
+      rgba(
+        167,
+        122,
+        255,
+        0.28
+      ),
+
+    0 0 72px
+      rgba(
+        109,
+        44,
+        201,
+        0.13
+      );
+
+  opacity: 0.86;
 
   pointer-events: none;
+
+  mix-blend-mode: screen;
 
   animation:
     rimMorph
@@ -576,7 +813,119 @@
 
 
 /* ============================================================
-   VERY FINE FIBER
+   MEDIUM WHITE HALO
+============================================================ */
+
+.hotRim::before {
+  content: '';
+
+  position: absolute;
+
+  inset: -6px;
+
+  border-radius: inherit;
+
+  border:
+    clamp(
+      4px,
+      0.52vw,
+      6px
+    )
+    solid
+    rgba(
+      255,
+      255,
+      255,
+      0.2
+    );
+
+  filter:
+    blur(8px);
+
+  box-shadow:
+    0 0 16px
+      rgba(
+        255,
+        255,
+        255,
+        0.42
+      ),
+
+    0 0 30px
+      rgba(
+        222,
+        203,
+        255,
+        0.38
+      ),
+
+    0 0 54px
+      rgba(
+        167,
+        122,
+        255,
+        0.2
+      );
+
+  opacity: 0.88;
+
+  pointer-events: none;
+}
+
+
+/* ============================================================
+   LARGE DIFFUSED HALO
+============================================================ */
+
+.hotRim::after {
+  content: '';
+
+  position: absolute;
+
+  inset: -14px;
+
+  border-radius: inherit;
+
+  border:
+    clamp(
+      7px,
+      0.8vw,
+      10px
+    )
+    solid
+    rgba(
+      230,
+      215,
+      255,
+      0.08
+    );
+
+  filter:
+    blur(17px);
+
+  box-shadow:
+    0 0 45px
+      rgba(
+        185,
+        145,
+        255,
+        0.18
+      ),
+
+    0 0 80px
+      rgba(
+        109,
+        44,
+        201,
+        0.08
+      );
+
+  pointer-events: none;
+}
+
+
+/* ============================================================
+   FINE SECONDARY RIM
 ============================================================ */
 
 .fineRim {
@@ -596,8 +945,14 @@
     51%;
 
   border:
-    0.6px solid
-    rgba(190, 151, 255, 0.55);
+    0.6px
+    solid
+    rgba(
+      190,
+      151,
+      255,
+      0.55
+    );
 
   opacity: 0.55;
 
@@ -607,18 +962,22 @@
     fineOrbit
     13s
     linear
-    infinite reverse;
+    infinite
+    reverse;
 }
 
 
 /* ============================================================
-   PARTICLES
+   PARTICLE FIELD
 ============================================================ */
 
 .particles {
   position: absolute;
 
-  inset: -1%;
+  /*
+   * Larger than the ring.
+   */
+  inset: -8%;
 
   z-index: 10;
 
@@ -631,34 +990,86 @@
     55s
     linear
     infinite;
+
+  will-change:
+    transform;
 }
 
+
+/* ============================================================
+   PARTICLE
+============================================================ */
 
 .particle {
   position: absolute;
 
-  border-radius: 50%;
+  border-radius: 9999px;
 
   background:
-    rgba(235, 222, 255, 0.95);
+    rgba(
+      235,
+      222,
+      255,
+      0.92
+    );
 
   opacity:
-    var(--particle-opacity);
+    var(
+      --particle-opacity
+    );
 
   box-shadow:
-    0 0 3px rgba(255, 255, 255, 0.65),
-    0 0 7px rgba(167, 122, 255, 0.42);
+    0 0 3px
+      rgba(
+        255,
+        255,
+        255,
+        0.8
+      ),
+
+    0 0 8px
+      rgba(
+        190,
+        151,
+        255,
+        0.55
+      ),
+
+    0 0 16px
+      rgba(
+        139,
+        85,
+        232,
+        0.24
+      );
 
   transform:
-    translate(-50%, -50%)
+    translate(
+      -50%,
+      -50%
+    )
     scale(1);
 
+  transform-origin: center;
+
   transition:
-    transform 850ms
-    cubic-bezier(0.16, 1, 0.3, 1);
+    transform
+      1100ms
+      cubic-bezier(
+        0.16,
+        1,
+        0.3,
+        1
+      ),
+
+    opacity
+      700ms
+      ease;
 
   transition-delay:
-    var(--particle-delay);
+    var(
+      --particle-delay
+    );
 
   animation:
     particleTwinkle
@@ -668,58 +1079,108 @@
 }
 
 
+/* ============================================================
+   BRIGHT PARTICLES
+============================================================ */
+
 .particleBright {
-  background: #ffffff;
+  background:
+    #ffffff;
 
   box-shadow:
-    0 0 4px rgba(255, 255, 255, 1),
-    0 0 10px rgba(190, 151, 255, 0.8),
-    0 0 18px rgba(139, 85, 232, 0.38);
+    0 0 5px
+      rgba(
+        255,
+        255,
+        255,
+        1
+      ),
+
+    0 0 13px
+      rgba(
+        225,
+        210,
+        255,
+        0.95
+      ),
+
+    0 0 25px
+      rgba(
+        167,
+        122,
+        255,
+        0.6
+      ),
+
+    0 0 42px
+      rgba(
+        109,
+        44,
+        201,
+        0.3
+      );
 }
 
 
+/* ============================================================
+   HERO-WIDE HOVER
+
+   Requires ancestor:
+   .hero-particle-field
+============================================================ */
+
 @media (hover: hover) and (pointer: fine) {
-  .ring:hover .particle {
+  :global(.hero-particle-field:hover)
+    .particle {
+    opacity: 0.82;
+
     transform:
       translate(
         calc(-50% + var(--scatter-x)),
         calc(-50% + var(--scatter-y))
       )
-      scale(1.15);
+      scale(1.3);
   }
 
+  :global(.hero-particle-field:hover)
+    .particleBright {
+    opacity: 1;
 
-  .ring:hover .particleBright {
     transform:
       translate(
         calc(-50% + var(--scatter-x)),
         calc(-50% + var(--scatter-y))
       )
-      scale(1.4);
+      scale(1.65);
   }
 
-
-  .ring:hover .glowRing {
-    opacity: 0.94;
-
-    filter:
-      blur(21px);
+  :global(.hero-particle-field:hover)
+    .glowRing {
+    opacity: 0.96;
+    filter: blur(24px);
   }
 
+  :global(.hero-particle-field:hover)
+    .fabricRing {
+    opacity: 0.56;
+  }
 
-  .ring:hover .fabricRing {
-    opacity: 0.52;
+  :global(.hero-particle-field:hover)
+    .hotRim {
+    opacity: 1;
+  }
+
+  :global(.hero-particle-field:hover)
+    .hoverScale {
+    transform: scale(1.045);
   }
 }
 
 
 /* ============================================================
-   ANIMATIONS
+   GLOW ORBIT
 ============================================================ */
 
-/*
- * Main diffused energy flow
- */
 @keyframes glowOrbit {
   0% {
     transform:
@@ -758,9 +1219,10 @@
 }
 
 
-/*
- * Main sharp color movement
- */
+/* ============================================================
+   COLOR ORBIT
+============================================================ */
+
 @keyframes colorOrbit {
   from {
     transform:
@@ -774,9 +1236,10 @@
 }
 
 
-/*
- * Transparent sheer ribbons
- */
+/* ============================================================
+   FABRIC ORBIT 1
+============================================================ */
+
 @keyframes fabricOrbit1 {
   0% {
     transform:
@@ -800,6 +1263,10 @@
   }
 }
 
+
+/* ============================================================
+   FABRIC ORBIT 2
+============================================================ */
 
 @keyframes fabricOrbit2 {
   0% {
@@ -825,6 +1292,10 @@
 }
 
 
+/* ============================================================
+   FABRIC ORBIT 3
+============================================================ */
+
 @keyframes fabricOrbit3 {
   0% {
     transform:
@@ -849,9 +1320,10 @@
 }
 
 
-/*
- * Inner white ring gently changes its silhouette.
- */
+/* ============================================================
+   RIM MORPH
+============================================================ */
+
 @keyframes rimMorph {
   0%,
   100% {
@@ -906,6 +1378,10 @@
 }
 
 
+/* ============================================================
+   FINE RIM ORBIT
+============================================================ */
+
 @keyframes fineOrbit {
   from {
     transform:
@@ -918,6 +1394,10 @@
   }
 }
 
+
+/* ============================================================
+   PARTICLE ORBIT
+============================================================ */
 
 @keyframes particleOrbit {
   from {
@@ -932,31 +1412,40 @@
 }
 
 
+/* ============================================================
+   PARTICLE TWINKLE
+============================================================ */
+
 @keyframes particleTwinkle {
   0%,
   100% {
     opacity:
       calc(
-        var(--particle-opacity) *
+        var(
+          --particle-opacity
+        ) *
         0.4
       );
   }
 
   50% {
     opacity:
-      var(--particle-opacity);
+      var(
+        --particle-opacity
+      );
   }
 }
 
 
 /* ============================================================
-   RESPONSIVE
+   TABLET
 ============================================================ */
 
 @media (max-width: 1024px) {
   .hoverScale {
     inset: 7%;
   }
+
 
   .glowRing {
     filter:
@@ -965,20 +1454,27 @@
 }
 
 
+/* ============================================================
+   MOBILE
+============================================================ */
+
 @media (max-width: 640px) {
   .hoverScale {
     inset: 4%;
   }
+
 
   .glowRing {
     filter:
       blur(11px);
   }
 
+
   .fabricRing {
     filter:
       blur(3px);
   }
+
 
   .hotRim {
     border-width:
@@ -988,7 +1484,9 @@
 
 
 /* ============================================================
-   TOUCH
+   TOUCH DEVICES
+
+   No hover scatter.
 ============================================================ */
 
 @media (hover: none) and (pointer: coarse) {
@@ -1012,11 +1510,14 @@
   .fineRim,
   .particles,
   .particle {
-    animation: none !important;
+    animation:
+      none !important;
   }
+
 
   .hoverScale,
   .particle {
-    transition: none !important;
+    transition:
+      none !important;
   }
 }
