@@ -718,102 +718,137 @@
 
 
 /* ============================================================
-   BLURRED WHITE / LAVENDER RIM
+   HOT LAVENDER ENERGY RIBBON
+
+   IMPORTANT:
+   No full white border.
+   The light exists only in irregular sections around the ring,
+   so it blends into the purple fabric instead of looking like
+   a separate white circle.
 ============================================================ */
 
 .hotRim {
   position: absolute;
 
-  inset: 8%;
+  inset: 5.5%;
 
   border-radius:
-    50%
-    50%
-    48%
-    52%
-    /
-    51%
-    49%
-    52%
-    48%;
-
-  /*
-   * Soft core.
-   */
-  border:
-    clamp(
-      1.5px,
-      0.22vw,
-      2.4px
-    )
-    solid
-    rgba(
-      255,
-      252,
-      255,
-      0.58
-    );
-
-  filter:
-    blur(1.7px);
-
-  box-shadow:
-    0 0 5px
-      rgba(
-        255,
-        255,
-        255,
-        0.72
-      ),
-
-    0 0 12px
-      rgba(
-        246,
-        237,
-        255,
-        0.64
-      ),
-
-    0 0 24px
-      rgba(
-        216,
-        191,
-        255,
-        0.48
-      ),
-
-    0 0 44px
-      rgba(
-        167,
-        122,
-        255,
-        0.28
-      ),
-
-    0 0 72px
-      rgba(
-        109,
-        44,
-        201,
-        0.13
-      );
-
-  opacity: 0.86;
+    47% 53% 49% 51% /
+    52% 46% 54% 48%;
 
   pointer-events: none;
 
+  /*
+   * Brightness changes around the circumference.
+   * Some areas are nearly transparent, while a few sections
+   * become white/lavender.
+   */
+  background:
+    conic-gradient(
+      from -18deg,
+
+      rgba(255, 255, 255, 0.02) 0deg,
+
+      rgba(203, 166, 255, 0.18) 22deg,
+
+      rgba(246, 235, 255, 0.72) 46deg,
+
+      rgba(255, 255, 255, 0.92) 61deg,
+
+      rgba(191, 145, 255, 0.52) 80deg,
+
+      rgba(116, 63, 226, 0.12) 106deg,
+
+      transparent 128deg,
+
+      rgba(113, 59, 222, 0.08) 152deg,
+
+      rgba(199, 159, 255, 0.32) 184deg,
+
+      rgba(251, 243, 255, 0.72) 207deg,
+
+      rgba(255, 255, 255, 0.88) 222deg,
+
+      rgba(190, 147, 255, 0.38) 248deg,
+
+      transparent 270deg,
+
+      rgba(98, 44, 199, 0.12) 298deg,
+
+      rgba(221, 193, 255, 0.48) 326deg,
+
+      rgba(255, 255, 255, 0.75) 344deg,
+
+      rgba(255, 255, 255, 0.02) 360deg
+    );
+
+  /*
+   * Create an annulus instead of filling the whole element.
+   *
+   * Wider than before so it feels like flowing energy,
+   * not a thin stroked circle.
+   */
+  -webkit-mask:
+    radial-gradient(
+      farthest-side,
+
+      transparent 0%,
+      transparent 73%,
+
+      rgba(0, 0, 0, 0.18) 75%,
+      #000 78%,
+      #000 84%,
+      rgba(0, 0, 0, 0.55) 87%,
+
+      transparent 92%
+    );
+
+  mask:
+    radial-gradient(
+      farthest-side,
+
+      transparent 0%,
+      transparent 73%,
+
+      rgba(0, 0, 0, 0.18) 75%,
+      #000 78%,
+      #000 84%,
+      rgba(0, 0, 0, 0.55) 87%,
+
+      transparent 92%
+    );
+
+  opacity: 0.50;
+
+  filter:
+    blur(2.8px)
+    drop-shadow(
+      0 0 7px
+      rgba(245, 235, 255, 0.34)
+    )
+    drop-shadow(
+      0 0 18px
+      rgba(194, 129, 255, 0.28)
+    );
+
   mix-blend-mode: screen;
 
+  transform-origin: center;
+
   animation:
-    rimMorph
-    5.5s
-    ease-in-out
-    infinite;
+    hotRimFlow 10s linear infinite,
+    hotRimMorph 6s ease-in-out infinite alternate;
+
+  will-change:
+    transform,
+    border-radius;
 }
 
 
 /* ============================================================
-   MEDIUM WHITE HALO
+   MEDIUM SPREAD
+
+   This is intentionally much softer than the main ribbon.
 ============================================================ */
 
 .hotRim::before {
@@ -821,60 +856,85 @@
 
   position: absolute;
 
-  inset: -6px;
+  inset: -2.5%;
 
   border-radius: inherit;
 
-  border:
-    clamp(
-      4px,
-      0.52vw,
-      6px
-    )
-    solid
-    rgba(
-      255,
-      255,
-      255,
-      0.2
+  background:
+    conic-gradient(
+      from 46deg,
+
+      transparent 0deg,
+
+      rgba(175, 121, 255, 0.06) 28deg,
+
+      rgba(228, 205, 255, 0.3) 58deg,
+
+      rgba(255, 255, 255, 0.32) 78deg,
+
+      rgba(181, 130, 255, 0.16) 105deg,
+
+      transparent 142deg,
+
+      rgba(139, 85, 232, 0.08) 185deg,
+
+      rgba(232, 211, 255, 0.28) 218deg,
+
+      rgba(255, 255, 255, 0.27) 239deg,
+
+      rgba(167, 122, 255, 0.12) 268deg,
+
+      transparent 304deg,
+
+      rgba(204, 171, 255, 0.24) 337deg,
+
+      transparent 360deg
     );
 
-  filter:
-    blur(8px);
+  -webkit-mask:
+    radial-gradient(
+      farthest-side,
 
-  box-shadow:
-    0 0 16px
-      rgba(
-        255,
-        255,
-        255,
-        0.42
-      ),
+      transparent 0%,
+      transparent 68%,
 
-    0 0 30px
-      rgba(
-        222,
-        203,
-        255,
-        0.38
-      ),
+      #000 74%,
+      #000 87%,
 
-    0 0 54px
-      rgba(
-        167,
-        122,
-        255,
-        0.2
-      );
+      transparent 95%
+    );
 
-  opacity: 0.88;
+  mask:
+    radial-gradient(
+      farthest-side,
 
-  pointer-events: none;
+      transparent 0%,
+      transparent 68%,
+
+      #000 74%,
+      #000 87%,
+
+      transparent 95%
+    );
+
+  opacity: 0.55;
+
+  filter: blur(13px);
+
+  mix-blend-mode: screen;
+
+  transform: rotate(17deg);
+
+  animation:
+    hotHaloFlow 15s linear infinite reverse;
 }
 
 
 /* ============================================================
-   LARGE DIFFUSED HALO
+   LARGE DIFFUSED SPREAD
+
+   This is what makes the white/lavender energy dissolve outward
+   into the surrounding purple instead of stopping at the ring.
 ============================================================ */
 
 .hotRim::after {
@@ -882,88 +942,264 @@
 
   position: absolute;
 
-  inset: -14px;
+  inset: -7%;
 
-  border-radius: inherit;
+  border-radius:
+    53% 47% 55% 45% /
+    46% 54% 43% 57%;
 
-  border:
-    clamp(
-      7px,
-      0.8vw,
-      10px
-    )
-    solid
-    rgba(
-      230,
-      215,
-      255,
-      0.08
+  background:
+    conic-gradient(
+      from 105deg,
+
+      transparent 0deg,
+
+      rgba(139, 85, 232, 0.08) 24deg,
+
+      rgba(194, 129, 255, 0.17) 54deg,
+
+      rgba(236, 217, 255, 0.2) 76deg,
+
+      transparent 118deg,
+
+      rgba(109, 44, 201, 0.05) 165deg,
+
+      rgba(194, 129, 255, 0.12) 205deg,
+
+      rgba(255, 246, 255, 0.16) 230deg,
+
+      transparent 273deg,
+
+      rgba(167, 122, 255, 0.1) 320deg,
+
+      transparent 360deg
     );
 
-  filter:
-    blur(17px);
+  -webkit-mask:
+    radial-gradient(
+      farthest-side,
 
-  box-shadow:
-    0 0 45px
-      rgba(
-        185,
-        145,
-        255,
-        0.18
-      ),
+      transparent 0%,
+      transparent 62%,
 
-    0 0 80px
-      rgba(
-        109,
-        44,
-        201,
-        0.08
-      );
+      rgba(0, 0, 0, 0.35) 68%,
+      #000 75%,
+      rgba(0, 0, 0, 0.48) 88%,
 
-  pointer-events: none;
+      transparent 100%
+    );
+
+  mask:
+    radial-gradient(
+      farthest-side,
+
+      transparent 0%,
+      transparent 62%,
+
+      rgba(0, 0, 0, 0.35) 68%,
+      #000 75%,
+      rgba(0, 0, 0, 0.48) 88%,
+
+      transparent 100%
+    );
+
+  opacity: 0.52;
+
+  filter: blur(27px);
+
+  mix-blend-mode: screen;
+
+  animation:
+    largeHaloFlow 21s linear infinite;
 }
 
 
 /* ============================================================
-   FINE SECONDARY RIM
+   FINE SECONDARY FIBER
+
+   Also remove its complete border.
 ============================================================ */
 
 .fineRim {
   position: absolute;
 
-  inset: 7.5%;
+  inset: 7%;
 
   border-radius:
-    49%
-    51%
-    52%
-    48%
-    /
-    52%
-    48%
-    49%
-    51%;
+    46% 54% 51% 49% /
+    53% 45% 55% 47%;
 
-  border:
-    0.6px
-    solid
-    rgba(
-      190,
-      151,
-      255,
-      0.55
+  pointer-events: none;
+
+  background:
+    conic-gradient(
+      from 70deg,
+
+      transparent 0deg,
+
+      rgba(192, 151, 255, 0.16) 16deg,
+
+      rgba(233, 215, 255, 0.65) 35deg,
+
+      transparent 61deg,
+
+      rgba(134, 74, 225, 0.15) 102deg,
+
+      transparent 135deg,
+
+      rgba(224, 199, 255, 0.58) 178deg,
+
+      rgba(167, 122, 255, 0.22) 205deg,
+
+      transparent 235deg,
+
+      rgba(245, 235, 255, 0.52) 286deg,
+
+      transparent 315deg,
+
+      rgba(177, 129, 255, 0.24) 345deg,
+
+      transparent 360deg
+    );
+
+  -webkit-mask:
+    radial-gradient(
+      farthest-side,
+
+      transparent 0%,
+      transparent 80%,
+
+      #000 82%,
+      #000 84.5%,
+
+      transparent 87%
+    );
+
+  mask:
+    radial-gradient(
+      farthest-side,
+
+      transparent 0%,
+      transparent 80%,
+
+      #000 82%,
+      #000 84.5%,
+
+      transparent 87%
     );
 
   opacity: 0.55;
 
-  pointer-events: none;
+  filter:
+    blur(1px)
+    drop-shadow(
+      0 0 5px
+      rgba(194, 129, 255, 0.45)
+    );
+
+  mix-blend-mode: screen;
+
+  transform-origin: center;
 
   animation:
-    fineOrbit
-    13s
-    linear
-    infinite
-    reverse;
+    fineEnergyFlow 14s linear infinite reverse,
+    fineEnergyMorph 7s ease-in-out infinite alternate;
+}
+
+
+/* ============================================================
+   HOT-RIM MOTION
+============================================================ */
+
+@keyframes hotRimFlow {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes hotHaloFlow {
+  from {
+    transform: rotate(17deg);
+  }
+
+  to {
+    transform: rotate(377deg);
+  }
+}
+
+@keyframes largeHaloFlow {
+  from {
+    transform: rotate(-25deg);
+  }
+
+  to {
+    transform: rotate(335deg);
+  }
+}
+
+@keyframes fineEnergyFlow {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* ============================================================
+   ORGANIC MORPHING
+============================================================ */
+
+@keyframes hotRimMorph {
+  0% {
+    border-radius:
+      47% 53% 49% 51% /
+      52% 46% 54% 48%;
+  }
+
+  33% {
+    border-radius:
+      53% 47% 56% 44% /
+      45% 55% 48% 52%;
+  }
+
+  66% {
+    border-radius:
+      45% 55% 47% 53% /
+      56% 44% 52% 48%;
+  }
+
+  100% {
+    border-radius:
+      51% 49% 54% 46% /
+      47% 53% 45% 55%;
+  }
+}
+
+@keyframes fineEnergyMorph {
+  0% {
+    border-radius:
+      46% 54% 51% 49% /
+      53% 45% 55% 47%;
+  }
+
+  50% {
+    border-radius:
+      54% 46% 47% 53% /
+      45% 56% 44% 55%;
+  }
+
+  100% {
+    border-radius:
+      49% 51% 55% 45% /
+      56% 44% 52% 48%;
+  }
 }
 
 
