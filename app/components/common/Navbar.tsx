@@ -37,12 +37,12 @@ export default function Navbar() {
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center">
             <Image
-              src="images/jxai-logo.svg"
+              src="/images/jxai-logo.svg"
               alt="JXAI Logo"
               width={39}
               height={24}
-              loading="eager"
               priority
+              className="h-auto w-auto"
             />
           </Link>
           <button
